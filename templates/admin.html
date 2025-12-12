@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Claufe. Admin</title>
@@ -10,9 +11,9 @@
 
   <!-- Header -->
   <header class="admin-header">
-        <div class="landing-logo">
-        <img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo">
-        
+    <div class="landing-logo">
+      <img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo">
+
     </div>
   </header>
 
@@ -32,7 +33,7 @@
 
     <a href="{{ url_for('add_product') }}">
       <button class="admin-tab {{ 'active' if active_page == 'upload' else '' }}">
-        Product Images
+        ADD PRODUCTS
       </button>
     </a>
 
@@ -56,4 +57,5 @@
   </main>
 
 </body>
+
 </html>
