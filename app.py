@@ -9,6 +9,7 @@ import razorpay
 import hmac
 import hashlib
 import json
+import traceback
 
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
@@ -490,7 +491,7 @@ def verify_payment():
     ).hexdigest()
 
     if not hmac.compare_digest(generated_signature, signature):
-        return jsonify({"success": False, "redirect_url": FAILED_URL})
+        return jsonify({"success": False, "redirect_url": url_for("landing")})
 
     # CART
     items = list(cart_col.find({"user_email": session["email"]}))
@@ -717,61 +718,67 @@ def add_product():
         return need
 
     if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        price = request.form.get("price", "").strip()
-        old_price = request.form.get("old_price", "").strip()
-        description = request.form.get("description", "").strip()
-        selected_sizes = request.form.getlist("sizes")
-
-        # ⭐️ Rating added
-        rating_raw = request.form.get("rating")
         try:
-            rating = float(rating_raw)
-        except:
-            rating = None
+            name = request.form.get("name", "").strip()
+            price = request.form.get("price", "").strip()
+            old_price = request.form.get("old_price", "").strip()
+            description = request.form.get("description", "").strip()
+            selected_sizes = request.form.getlist("sizes")
 
-        # stock per size
-        stock = {}
-        for s in ["S", "M", "L", "XL", "XXL"]:
-            qty_str = request.form.get(f"stock_{s}", "0")
+            # ⭐️ Rating added
+            rating_raw = request.form.get("rating")
             try:
-                qty = int(qty_str)
-            except ValueError:
-                qty = 0
-            if s in selected_sizes and qty > 0:
-                stock[s] = qty
+                rating = float(rating_raw)
+            except:
+                rating = None
 
-        image_files = request.files.getlist("images")
-        saved_images = []
+            # stock per size
+            stock = {}
+            for s in ["S", "M", "L", "XL", "XXL"]:
+                qty_str = request.form.get(f"stock_{s}", "0")
+                try:
+                    qty = int(qty_str)
+                except ValueError:
+                    qty = 0
+                if s in selected_sizes and qty > 0:
+                    stock[s] = qty
 
-        for file in image_files[:4]:
-            if file and allowed_file(file.filename):
-                filename = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + "_" + secure_filename(file.filename)
-                file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-                saved_images.append(filename)
+            image_files = request.files.getlist("images")
+            saved_images = []
 
-        if not saved_images:
-            flash("Upload at least one image", "error")
+            for file in image_files[:4]:
+                if file and allowed_file(file.filename):
+                    filename = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + "_" + secure_filename(file.filename)
+                    file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+                    saved_images.append(filename)
+
+            if not saved_images:
+                flash("Upload at least one image", "error")
+                return redirect(url_for("add_product"))
+
+            main_image = saved_images[0]
+
+            # insert DB
+            products_col.insert_one({
+                "name": name,
+                "description": description,
+                "price": float(price),
+                "old_price": float(old_price) if old_price else None,
+                "image_filename": main_image,
+                "images": saved_images,
+                "sizes": selected_sizes,
+                "stock": stock,
+                "rating": rating,     # ⭐️ Stored Here
+                "created_at": datetime.datetime.now()
+            })
+
+            flash("Product added!", "success")
+            return redirect(url_for("admin_products"))
+        except Exception as e:
+            print("Add product error:", e)
+            traceback.print_exc()
+            flash("An error occurred while adding the product. Check server logs.", "error")
             return redirect(url_for("add_product"))
-
-        main_image = saved_images[0]
-
-        # insert DB
-        products_col.insert_one({
-            "name": name,
-            "description": description,
-            "price": float(price),
-            "old_price": float(old_price) if old_price else None,
-            "image_filename": main_image,
-            "images": saved_images,
-            "sizes": selected_sizes,
-            "stock": stock,
-            "rating": rating,     # ⭐️ Stored Here
-            "created_at": datetime.datetime.now()
-        })
-
-        flash("Product added!", "success")
-        return redirect(url_for("admin_products"))
 
     return render_template("upload.html", active_page="upload")
 #====================================================
