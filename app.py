@@ -30,9 +30,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "change_this_secret_key")
 
 RAZORPAY_KEY = os.getenv("RAZORPAY_KEY")
 RAZORPAY_SECRET = os.getenv("RAZORPAY_SECRET")
-MONGO_URL = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
-SUCCESS_URL = os.getenv("SUCCESS_URL", "/order-success")
-FAILED_URL = os.getenv("FAILED_URL", "/checkout")
+MONGO_URL = os.getenv("MONGODB_URI")
 
 # Razorpay Client
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY, RAZORPAY_SECRET))
