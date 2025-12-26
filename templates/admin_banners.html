@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Banners - Claufe.</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>/* =========================================
+   MOBILE RESPONSIVE — ADMIN BANNERS PAGE
+========================================= */
+/* Base layout */
+.admin-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(20,20,40,0.06);
+  overflow: hidden;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.upload-card-body {
+  padding: 20px;
+}
+
+/* File input styled to be touch-friendly */
+.input-file {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px dashed #d0d7de;
+  border-radius: 8px;
+  background: #fbfbfd;
+  cursor: pointer;
+}
+
+.btn-primary { padding: 12px 18px; }
+
+.card .actions { display:flex; justify-content:space-between; gap:8px; align-items:center; padding:12px 16px; }
+.card .actions .card-sub { color:#666; font-size:13px; }
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+  .admin-header { flex-direction: column; align-items:flex-start; gap:10px; padding:12px 16px; }
+  .admin-nav { overflow-x:auto; padding:10px 12px; gap:8px; }
+  .admin-tab { padding:8px 12px; font-size:14px; }
+  .card img { height:180px; }
+  .card .actions { flex-direction:column; align-items:flex-start; gap:10px; }
+  .btn-danger { width:100%; }
+}
+
+@media (max-width: 480px) {
+  .card img { height:160px; }
+  h2 { font-size:20px; }
+}
+</style>
+</head>
+
+<body class="admin-shell">
+
+  <!-- HEADER -->
+  <header class="admin-header">
+    <div class="landing-logo">
+      <img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo">
+    </div>
+
+    <div>
+      {% if session.get('name') %}
+      <span style="margin-right:12px;">
+        {{ session.get('name') }} ({{ session.get('role') }})
+      </span>
+      <a href="{{ url_for('logout') }}" class="landing-admin-link">Logout</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- BACK TO HOME -->
+  <a href="{{ url_for('landing') }}">
+    <button class="btn btn-outline" style="margin-left:32px; margin-top:10px;">
+      ← Go to Home Page
+    </button>
+  </a>
+
+  <!-- NAVIGATION -->
+  <nav class="admin-nav">
+
+    <a href="{{ url_for('admin_dashboard') }}">
+      <button class="admin-tab {{ 'active' if active_page=='dashboard' else '' }}">Dashboard</button>
+    </a>
+
+    <a href="{{ url_for('admin_products') }}">
+      <button class="admin-tab {{ 'active' if active_page=='products' else '' }}">Products</button>
+    </a>
+
+    <a href="{{ url_for('add_product') }}">
+      <button class="admin-tab {{ 'active' if active_page=='upload' else '' }}">Product Images</button>
+    </a>
+
+    <!-- FIXED: analytics → admin_analytics -->
+    <a href="{{ url_for('admin_analytics') }}">
+      <button class="admin-tab {{ 'active' if active_page=='analytics' else '' }}">Analytics</button>
+    </a>
+
+    <a href="{{ url_for('admin_banners') }}">
+      <button class="admin-tab {{ 'active' if active_page=='banners' else '' }}">Banners</button>
+    </a>
+            <a href="{{ url_for('admin_posters') }}">
+      <button class="admin-tab {{ 'active' if active_page=='posters' else '' }}">Posters</button>
+    </a>
+
+
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-content">
+
+    <h2>Homepage Banner Upload (16:9 Image - 1920×1080)</h2>
+
+    <!-- UPLOAD FORM -->
+    <div class="card" style="padding:25px; margin-bottom:30px;">
+      <form method="POST" enctype="multipart/form-data">
+
+        <label><b>Select Banner Image (Only 16:9)</b></label>
+        <input type="file" name="image" required class="input-file">
+
+        <p class="card-sub" style="margin-top:10px; line-height:1.5;">
+          ✔ Recommended size: <b>1920 × 1080 pixels</b><br>
+          ✔ Allowed formats: JPG, PNG, WEBP<br>
+          ✔ Max file size: <b>5 MB</b>
+        </p>
+
+        <button type="submit" class="btn btn-primary" style="margin-top:15px;">
+          Upload Banner
+        </button>
+
+      </form>
+    </div>
+
+    <h3>Uploaded Banners</h3>
+
+    <!-- BANNER LIST -->
+    <div class="card-grid">
+
+      {% for b in banners %}
+      <div class="card" style="padding:0; overflow:hidden;">
+
+        <!-- PREVIEW -->
+        <img src="{{ b.get('image_url') }}" alt="Banner" style="width:100%; height:auto; display:block;">
+
+        <!-- ACTIONS -->
+        <div style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
+          <span class="card-sub">{{ b['created_at'].strftime('%Y-%m-%d %H:%M') if b['created_at'] else 'Banner'
+            }}</span>
+
+          <form method="POST" action="{{ url_for('delete_banner', banner_id=b['_id']) }}"
+            onsubmit="return confirm('Delete this banner?');">
+
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+
+      </div>
+
+      {% else %}
+
+      <p style="text-align:center; width:100%;">No banners uploaded yet.</p>
+
+      {% endfor %}
+
+    </div>
+
+  </main>
+
+</body>
+
+</html>

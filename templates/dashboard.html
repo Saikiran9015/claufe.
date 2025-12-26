@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Claufe.</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    /* =========================================
+   ADMIN DASHBOARD – MOBILE RESPONSIVE
+========================================= */
+
+/* HEADER */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* HOME BUTTON */
+.btn.btn-outline {
+  margin-left: 20px;
+}
+
+/* NAVIGATION */
+.admin-nav {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-nav a {
+  flex-shrink: 0;
+}
+
+/* CONTENT */
+.admin-content {
+  padding: 20px;
+}
+
+/* CARD GRID */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* TABLE */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 600px;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  /* Header stack */
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .landing-logo img {
+    height: 36px;
+  }
+
+  /* Home button alignment */
+  .btn.btn-outline {
+    margin-left: 16px;
+    margin-top: 12px;
+  }
+
+  /* Cards stack */
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Headings */
+  h2 {
+    font-size: 20px;
+  }
+
+  /* Table text smaller */
+  .table th,
+  .table td {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+/* ================= SMALL PHONES ================= */
+@media (max-width: 480px) {
+
+  .admin-content {
+    padding: 16px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .admin-tab {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+}
+
+  </style>
+</head>
+
+<body class="admin-shell">
+
+  <!-- Header -->
+  <header class="admin-header">
+        <div class="landing-logo">
+        <img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo">
+    </div>
+
+    <div>
+      {% if session.get('name') %}
+        <span style="margin-right:12px;">
+          {{ session.get('name') }} ({{ session.get('role') }})
+        </span>
+        <a href="{{ url_for('logout') }}" class="landing-admin-link">Logout</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Home Button -->
+  <a href="{{ url_for('landing') }}">
+    <button class="btn btn-outline" style="margin-left:32px; margin-top:10px;">
+      ← Go to Home Page
+    </button>
+  </a>
+
+  <!-- Navigation -->
+  <nav class="admin-nav">
+
+    <a href="{{ url_for('admin_dashboard') }}">
+      <button class="admin-tab {{ 'active' if active_page=='dashboard' else '' }}">Dashboard</button>
+    </a>
+
+    <a href="{{ url_for('admin_products') }}">
+      <button class="admin-tab {{ 'active' if active_page=='products' else '' }}">Products</button>
+    </a>
+
+    <a href="{{ url_for('add_product') }}">
+      <button class="admin-tab {{ 'active' if active_page=='upload' else '' }}">Product Images</button>
+    </a>
+
+    <!-- FIXED: use admin_analytics -->
+    <a href="{{ url_for('admin_analytics') }}">
+      <button class="admin-tab {{ 'active' if active_page=='analytics' else '' }}">Analytics</button>
+    </a>
+
+    <a href="{{ url_for('admin_banners') }}">
+      <button class="admin-tab {{ 'active' if active_page=='banners' else '' }}">Banners</button>
+    </a>
+        <a href="{{ url_for('admin_posters') }}">
+      <button class="admin-tab {{ 'active' if active_page=='posters' else '' }}">Posters</button>
+    </a>
+
+  </nav>
+
+  <!-- Main Content -->
+  <main class="admin-content">
+    <h2>Admin Dashboard</h2>
+
+    <!-- Summary Cards -->
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Total Products</div>
+        <div class="card-value">{{ total_products }}</div>
+        <div class="card-sub">Products currently live</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Total Revenue (Dummy)</div>
+        <div class="card-value">₹{{ '%.2f'|format(total_revenue) }}</div>
+        <div class="card-sub">Sum of all product prices</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Recent Activity</div>
+        <div class="card-sub">Last {{ latest_products|length }} products added</div>
+      </div>
+    </div>
+
+    <!-- Recent Products Table -->
+    <div class="table-wrapper">
+      <div class="table-header">
+        <div class="table-title">Recent Products</div>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for p in latest_products %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ p['name'] }}</td>
+            <td>₹{{ '%.2f'|format(p['price']) }}</td>
+            <td>{{ p['created_at'].strftime('%Y-%m-%d') if p['created_at'] else '' }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="4">No products yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+</body>
+</html>

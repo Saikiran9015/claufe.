@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Claufe.</title>
+
+  <!-- ✅ REQUIRED FOR MOBILE -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body class="login-page">
+
+<header class="login-header">
+  <div><img src="{{ url_for('static', filename='3.png') }}" class="logo-img" alt="Logo"></div>
+  <a href="{{ url_for('landing') }}">← Home</a>
+</header>
+
+<div class="login-wrapper">
+
+  <div class="login-card">
+
+    <h2>Sign In</h2>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="alert alert-{{ category }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+
+      <label>Email</label>
+      <input type="email" name="email" required placeholder="you@example.com">
+
+      <label>Password</label>
+      <input type="password" name="password" required placeholder="••••••••">
+
+      <button type="submit" class="login-btn">
+        Login
+      </button>
+
+    </form>
+
+    <div class="login-footer">
+      Don’t have an account?
+      <a href="{{ url_for('signup') }}">Sign up</a>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

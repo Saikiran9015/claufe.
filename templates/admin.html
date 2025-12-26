@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Claufe. Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body class="admin-shell">
+
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="landing-logo">
+      <img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo">
+      <style>
+        /* =========================================
+   MOBILE RESPONSIVE — ADMIN HOME
+========================================= */
+
+@media (max-width: 768px) {
+
+  /* Header */
+  .admin-header {
+    padding: 12px 16px;
+    justify-content: center;
+  }
+
+  .logo-img {
+    height: 36px;
+  }
+
+  /* Navigation tabs */
+  .admin-nav {
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-nav a {
+    flex: 0 0 auto;
+  }
+
+  .admin-tab {
+    font-size: 14px;
+    padding: 8px 14px;
+    border-radius: 18px;
+  }
+
+  /* Page content */
+  .admin-content {
+    padding: 16px;
+    text-align: center;
+  }
+
+  .admin-content h2 {
+    font-size: 22px;
+  }
+
+  .admin-content p {
+    font-size: 15px;
+  }
+}
+
+/* EXTRA SMALL DEVICES */
+@media (max-width: 480px) {
+
+  .admin-tab {
+    font-size: 13px;
+    padding: 7px 12px;
+  }
+
+  .admin-content h2 {
+    font-size: 20px;
+  }
+}
+
+      </style>
+
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="admin-nav">
+    <a href="{{ url_for('admin_dashboard') }}">
+      <button class="admin-tab {{ 'active' if active_page == 'dashboard' else '' }}">
+        Dashboard
+      </button>
+    </a>
+
+    <a href="{{ url_for('admin_products') }}">
+      <button class="admin-tab {{ 'active' if active_page == 'products' else '' }}">
+        Products
+      </button>
+    </a>
+
+    <a href="{{ url_for('add_product') }}">
+      <button class="admin-tab {{ 'active' if active_page == 'upload' else '' }}">
+        ADD PRODUCTS
+      </button>
+    </a>
+
+    <a href="{{ url_for('analytics') }}">
+      <button class="admin-tab {{ 'active' if active_page == 'analytics' else '' }}">
+        Analytics
+      </button>
+    </a>
+
+    <a href="{{ url_for('admin_banners') }}">
+      <button class="admin-tab {{ 'active' if active_page == 'banners' else '' }}">
+        Banners
+      </button>
+    </a>
+  </nav>
+
+  <!-- Page Content -->
+  <main class="admin-content">
+    <h2>Welcome to Dream X Store Admin</h2>
+    <p>Use the tabs above to manage products and view analytics.</p>
+  </main>
+
+</body>
+
+</html>

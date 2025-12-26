@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Claufe.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+<style>
+/* ================= RESET ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f5f7fa;
+}
+
+/* =====================================================
+   HEADER (DESKTOP + MOBILE)
+===================================================== */
+.site-header {
+    width: 100%;
+    background: #000;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left img {
+    height: 38px;
+}
+
+/* ---------------- HAMBURGER ---------------- */
+.hamburger {
+    width: 28px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hamburger span {
+    height: 3px;
+    width: 100%;
+    background: white;
+    border-radius: 3px;
+}
+
+/* ---------------- MENU ---------------- */
+.menu {
+    display: none;
+    flex-direction: column;
+    background: linear-gradient(180deg, #111, #000);
+    padding: 16px;
+}
+
+.menu a {
+    color: #fff;
+    text-decoration: none;
+    padding: 14px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: #1a1a1a;
+    text-align: center;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    background: #222;
+}
+
+.menu.show {
+    display: flex;
+}
+
+/* ---------------- DESKTOP VIEW ---------------- */
+@media (min-width: 768px) {
+    .hamburger {
+        display: none;
+    }
+
+    .menu {
+        display: flex !important;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        background: transparent;
+        padding: 0 20px;
+        gap: 14px;
+    }
+
+    .menu a {
+        background: transparent;
+        margin: 0;
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .menu a:hover {
+        background: #222;
+    }
+}
+
+/* =====================================================
+   SLIDER
+===================================================== */
+.slider-wrapper {
+    width: 95%;
+    height: 420px;
+    margin: 16px auto;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.banner-buttons {
+    width: 95%;
+    max-width: 1200px;
+    margin: 12px auto 22px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+.banner-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #0a7cff;
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(10,124,255,0.18);
+}
+.banner-btn.secondary {
+    background: #fff;
+    color: #0a7cff;
+    border: 1px solid rgba(10,124,255,0.12);
+}
+
+.slider-controls {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 18px;
+    display: flex;
+    gap: 8px;
+    z-index: 900;
+}
+
+.slider-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.6);
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.15);
+}
+
+.slider-dot.active { background: #fff; }
+
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    pointer-events: none;
+}
+
+.slider-nav button {
+    pointer-events: auto;
+    background: rgba(0,0,0,0.45);
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.slider-nav .prev { position: absolute; left: 12px; }
+.slider-nav .next { position: absolute; right: 12px; }
+
+.slider {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .slider-wrapper {
+        height: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .slider-wrapper {
+        height: 220px;
+    }
+}
+
+/* =====================================================
+   TITLES
+===================================================== */
+.section-title {
+    text-align: center;
+    margin: 20px 10px;
+}
+
+.section-title h1 {
+    font-size: 26px;
+}
+
+.section-title p {
+    font-size: 14px;
+    color: #777;
+}
+
+/* =====================================================
+   PRODUCTS
+===================================================== */
+.product-grid {
+    width: 94%;
+    max-width: 1300px;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 5px 14px rgba(0,0,0,0.1);
+    transition: 0.25s;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+}
+
+.product-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+@media (max-width: 480px) {
+    .product-card img {
+        height: 180px;
+    }
+
+    .section-title h1 {
+        font-size: 22px;
+    }
+}
+
+.product-body {
+    padding: 12px;
+}
+
+.product-name {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.product-price {
+    font-size: 16px;
+    color: #0a7cff;
+    margin: 6px 0;
+}
+
+.btn {
+    width: 100%;
+    background: #0a7cff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #005fcc;
+}
+
+/* =====================================================
+   SLIDER ANIMATION
+===================================================== */
+/* JS-driven sliding will handle automatic transitions */
+/* ================= HEADER ================= */
+.site-header {
+    position: relative;
+    width: 100%;
+    background: #000;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.header-left img {
+    height: 38px;
+}
+
+/* ================= HAMBURGER ================= */
+.hamburger {
+    width: 28px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hamburger span {
+    height: 3px;
+    width: 100%;
+    background: #fff;
+    border-radius: 3px;
+}
+
+/* ================= MENU ================= */
+.menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    background: #000;
+    padding: 16px;
+}
+
+.menu a {
+    color: #fff;
+    text-decoration: none;
+    padding: 14px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    background: #111;
+    text-align: center;
+    font-size: 15px;
+}
+
+/* SHOW MENU */
+.menu.show {
+    display: flex;
+}
+
+/* ================= DESKTOP ================= */
+@media (min-width: 768px) {
+    .hamburger {
+        display: none;
+    }
+
+    .menu {
+        position: static;
+        display: flex !important;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        background: transparent;
+        padding: 0;
+        width: auto;
+        gap: 14px;
+    }
+
+    .menu a {
+        background: transparent;
+        padding: 6px 14px;
+        margin: 0;
+        font-size: 14px;
+        border-radius: 6px;
+    }
+
+    .menu a:hover {
+        background: #222;
+    }
+}
+/* =====================================================
+   MOBILE FIX: FULL PRODUCT IMAGE (NO CROP)
+===================================================== */
+@media (max-width: 600px) {
+
+    /* Single column on mobile */
+    .product-grid {
+        grid-template-columns: 1fr;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 12px;
+    }
+
+    /* Product image: full size */
+    .product-card img {
+        width: 100%;
+        height: auto !important;     /* 🔥 remove fixed height */
+        object-fit: contain !important; /* 🔥 show full image */
+        background: #f5f5f5;
+    }
+
+    /* Better spacing */
+    .product-body {
+        padding: 16px;
+    }
+
+    .btn {
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+@media (max-width: 600px) {
+    .product-card {
+        border-radius: 18px;
+    }
+}
+
+/* ================= FEATURED POSTERS (reworked) ================= */
+.poster-section {
+  width: 95%;
+  max-width: 1400px;
+  margin: 30px auto;
+  position: relative;
+  padding: 6px 0;
+}
+
+.poster-carousel {
+  overflow: hidden;
+  position: relative;
+}
+
+.poster-track {
+  display: flex;
+  gap: 18px;
+  align-items: stretch;
+  transition: transform 520ms cubic-bezier(.22,.9,.36,1);
+  will-change: transform;
+  padding: 8px;
+}
+
+/* Desktop: three items visible with small peek */
+@media (min-width: 1024px) {
+  .poster-item {
+    flex: 0 0 calc((100% - 36px) / 3); /* 3 columns with gap accounted */
+    height: 420px;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+  }
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .poster-item {
+    flex: 0 0 calc((100% - 18px) / 2);
+    height: 400px;
+  }
+}
+
+/* Mobile: single centered card with snap */
+@media (max-width: 768px) {
+  .poster-track {
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .poster-item {
+    flex: 0 0 86%;
+    height: 360px;
+    scroll-snap-align: center;
+    border-radius: 12px;
+  }
+  .poster-track::-webkit-scrollbar { display: none; }
+}
+
+/* Poster image + overlay */
+.poster-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .35s ease;
+}
+.poster-item:hover img { transform: scale(1.03); }
+
+.poster-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 22px;
+  color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0.08));
+  pointer-events: none;
+}
+.poster-overlay h3 { margin: 0 0 6px; font-size: 22px; pointer-events: auto; }
+.poster-overlay p { margin: 0; font-size: 14px; opacity: .95; pointer-events: auto; }
+
+/* Controls (prev/next) */
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 20;
+}
+.carousel-prev { left: 8px; }
+.carousel-next { right: 8px; }
+
+/* Dots */
+.carousel-dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.carousel-dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.18);
+  border: 0;
+  cursor: pointer;
+  transition: transform .18s;
+}
+.carousel-dots button.active {
+  background: #fff;
+  transform: scale(1.1);
+}
+
+/* =====================================================
+   FOOTER ================= */
+.site-footer {
+    background: #0b1220;
+    color: #cbd5e1;
+    padding: 36px 16px;
+}
+.footer-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+.footer-col {
+    flex: 1 1 220px;
+    min-width: 180px;
+}
+.footer-col h4 {
+    color: #fff;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+.footer-col p, .footer-col a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 6px 0;
+    display: block;
+}
+.footer-col a:hover { color: #fff; }
+.footer-bottom {
+    text-align: center;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 18px;
+    font-size: 13px;
+    color: #9aa6b2;
+}
+
+/* Hide poster-grid scrollbar for cleaner UI */
+.poster-grid::-webkit-scrollbar { display: none; }
+.poster-grid { -ms-overflow-style: none; scrollbar-width: none; }
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+    <div class="header-left">
+        <img src="{{ url_for('static', filename='3.png') }}" alt="Claufe Logo">
+    </div>
+
+    <nav class="menu" id="menu">
+        <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+        <a href="{{ url_for('cart') }}">Cart</a>
+
+        {% if session.get('email') %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('signup') }}">Signup</a>
+        {% endif %}
+    </nav>
+
+    <div class="hamburger" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+<!-- ================= FEATURED CATEGORIES / POSTERS ================= -->
+<section class="poster-section">
+  <div class="poster-carousel" aria-label="Featured posters carousel">
+    <button class="carousel-control carousel-prev" aria-label="Previous poster">‹</button>
+
+    <div class="poster-track" id="posterTrack">
+      {% for poster in posters %}
+      <a href="{{ poster.link or '#' }}" class="poster-item" role="group" aria-label="{{ poster.title }}">
+        <img src="{{ poster.image_url }}" alt="{{ poster.title }}">
+        <div class="poster-overlay">
+          <h3>{{ poster.title }}</h3>
+          <p>{{ poster.subtitle }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
+    <button class="carousel-control carousel-next" aria-label="Next poster">›</button>
+
+  </div>
+
+  <div class="carousel-dots" id="posterDots" aria-hidden="false"></div>
+</section>
+
+
+
+<!-- ================= SLIDER ================= -->
+<div class="slider-wrapper">
+    <div class="slider">
+        {% for b in banners %}
+            <img src="{{ b.image_url }}" alt="Banner">
+        {% else %}
+            <img src="https://via.placeholder.com/1920x600?text=No+Banners" alt="No Banner">
+        {% endfor %}
+    </div>
+
+    <!-- Three CTA buttons below the banner (uses first 3 banners) -->
+    <div class="banner-buttons">
+        {% if banners %}
+            {% for b in banners[:3] %}
+                <a href="{{ b.link or '#' }}" class="banner-btn">{{ b.cta_text or b.title or 'Shop' }}</a>
+            {% endfor %}
+        {% else %}
+            <a href="#" class="banner-btn">Shop Men</a>
+            <a href="#" class="banner-btn secondary">Shop Women</a>
+            <a href="#" class="banner-btn">New Arrivals</a>
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- ================= TITLE ================= -->
+<section class="section-title">
+    <h1>New Arrivals</h1>
+    <p>Top picks curated just for you</p>
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+<section class="product-grid">
+    {% for p in products %}
+    <article class="product-card">
+        <a href="{{ url_for('product_page', product_id=p['_id']) }}">
+            {% if p['image_filename'] %}
+            <img src="{{ p['image_filename'] if 'data:' in p['image_filename'] else url_for('uploaded_file', filename=p['image_filename']) }}" alt="{{ p['name'] }}">
+            {% else %}
+            <img src="https://via.placeholder.com/400x300?text=No+Image" alt="No Image">
+            {% endif %}
+        </a>
+
+        <div class="product-body">
+            <div class="product-name">{{ p['name'] }}</div>
+            <div class="product-price">₹{{ p['price'] }}</div>
+
+            <a href="{{ url_for('product_page', product_id=p['_id']) }}">
+                <button class="btn">Add to Cart</button>
+            </a>
+        </div>
+    </article>
+    {% else %}
+    <p style="grid-column:1/-1;text-align:center;">No products available.</p>
+    {% endfor %}
+</section>
+
+<script>
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("show");
+}
+</script>
+
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-col">
+            <h4>About Claufe</h4>
+            <p>Quality apparel & curated picks. Fast shipping across India.</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="{{ url_for('landing') }}">Home</a>
+            <a href="{{ url_for('cart') }}">Cart</a>
+
+        </div>
+
+        <div class="footer-col">
+            <h4>Contact</h4>
+            <p><a href="mailto:graphimy.info@gmail.com">Email: graphimy.info@gmail.com</a></p>
+            <p><a href="https://wa.me/918341988633" target="_blank">Phone: +91 83419 88633</a></p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        © <span id="year"></span> Claufe. All rights reserved.
+    </div>
+</footer>
+
+<script>
+// set dynamic year in footer
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+<script>
+// Banner carousel: auto-advance every 3 seconds, pause on hover
+(function() {
+    const slider = document.querySelector('.slider');
+    const sliderWrapper = document.querySelector('.slider-wrapper');
+    if (!slider || !sliderWrapper) return;
+
+    const slides = Array.from(slider.children);
+    if (slides.length <= 1) return; // no need to auto-scroll
+
+    let index = 0;
+    let timer = null;
+
+    function showSlide(i) {
+        slider.style.transform = `translateX(-${i * 100}%)`;
+    }
+
+    function start() {
+        stop();
+        timer = setInterval(() => {
+            index = (index + 1) % slides.length;
+            showSlide(index);
+        }, 3000); // 3000ms = 3 seconds
+    }
+
+    function stop() {
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+    }
+
+    // pause on hover/touch
+    sliderWrapper.addEventListener('mouseenter', stop);
+    sliderWrapper.addEventListener('mouseleave', start);
+    sliderWrapper.addEventListener('touchstart', stop);
+    sliderWrapper.addEventListener('touchend', start);
+
+    // ensure slides occupy equal width
+    slides.forEach(slide => {
+        slide.style.flex = '0 0 100%';
+    });
+
+    showSlide(0);
+    start();
+})();
+</script>
+
+<script>
+// wire up manual controls (dots + prev/next)
+(function(){
+    const slider = document.querySelector('.slider');
+    const wrapper = document.querySelector('.slider-wrapper');
+    const slides = slider ? Array.from(slider.children) : [];
+    if (!slider || slides.length <= 1) return;
+
+    const controls = document.querySelector('.slider-controls');
+    const prevBtn = document.querySelector('.slider-nav .prev');
+    const nextBtn = document.querySelector('.slider-nav .next');
+
+    let index = 0;
+    let timer = null;
+
+    function updateActiveDot(i){
+        const dots = controls.querySelectorAll('.slider-dot');
+        dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+    }
+
+    // create dots
+    slides.forEach((s, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'slider-dot' + (i===0? ' active':'');
+        dot.addEventListener('click', () => {
+            index = i;
+            slider.style.transform = `translateX(-${index * 100}%)`;
+            updateActiveDot(index);
+            // reset auto timer
+            if (timer) { clearInterval(timer); start(); }
+        });
+        controls.appendChild(dot);
+    });
+
+    function start(){
+        if (timer) clearInterval(timer);
+        timer = setInterval(()=>{
+            index = (index + 1) % slides.length;
+            slider.style.transform = `translateX(-${index * 100}%)`;
+            updateActiveDot(index);
+        }, 3000);
+    }
+
+    function stop(){ if (timer) clearInterval(timer); timer = null; }
+
+    prevBtn && prevBtn.addEventListener('click', ()=>{
+        stop();
+        index = (index - 1 + slides.length) % slides.length;
+        slider.style.transform = `translateX(-${index * 100}%)`;
+        updateActiveDot(index);
+        start();
+    });
+
+    nextBtn && nextBtn.addEventListener('click', ()=>{
+        stop();
+        index = (index + 1) % slides.length;
+        slider.style.transform = `translateX(-${index * 100}%)`;
+        updateActiveDot(index);
+        start();
+    });
+
+    // pause when user interacts
+    wrapper.addEventListener('mouseenter', stop);
+    wrapper.addEventListener('mouseleave', start);
+
+    start();
+})();
+</script>
+
+<script>
+(function () {
+  const grid = document.querySelector(".poster-grid");
+  if (!grid) return;
+
+  // Only enable auto-scroll on mobile
+  if (window.innerWidth > 768) return;
+
+  let interval;
+  const delay = 3500;
+
+  function stepSize() {
+    return grid.querySelector(".poster-card").offsetWidth + 14;
+  }
+
+  function start() {
+    stop();
+    interval = setInterval(() => {
+      if (grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 5) {
+        grid.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        grid.scrollBy({ left: stepSize(), behavior: "smooth" });
+      }
+    }, delay);
+  }
+
+  function stop() {
+    if (interval) clearInterval(interval);
+  }
+
+  // Pause on interaction
+  grid.addEventListener("touchstart", stop, { passive: true });
+  grid.addEventListener("touchend", () => setTimeout(start, 500), { passive: true });
+  grid.addEventListener("mouseenter", stop);
+  grid.addEventListener("mouseleave", start);
+
+  // Restart on resize
+  window.addEventListener("resize", () => {
+    stop();
+    if (window.innerWidth <= 768) start();
+  });
+
+  start();
+})();
+</script>
+
+<script>
+/* Replace previous poster-grid script with a smooth RAF-based auto-scroller
+   - continuous smooth scroll (px/sec)
+   - respects prefers-reduced-motion
+   - pauses on hover / pointer / touch and resumes after a delay
+*/
+(function(){
+  const grid = document.querySelector('.poster-grid');
+  if (!grid) return;
+
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) return;
+
+  const SPEED_PX_PER_SEC = 40;      // adjust scroll speed here
+  const RESUME_DELAY_MS = 600;      // resume after interaction
+  let running = false;
+  let rafId = null;
+  let lastTs = null;
+  let resumeTimer = null;
+
+  function step(ts){
+    if (!lastTs) lastTs = ts;
+    const dt = (ts - lastTs) / 1000;
+    lastTs = ts;
+
+    if (running) {
+      const max = grid.scrollWidth - grid.clientWidth;
+      if (max > 0) {
+        const delta = SPEED_PX_PER_SEC * dt;
+        if (Math.round(grid.scrollLeft + delta) >= max - 1) {
+          // loop back smoothly
+          grid.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          // use direct increment for smoother continuous motion
+          grid.scrollLeft += delta;
+        }
+      }
+    }
+
+    rafId = requestAnimationFrame(step);
+  }
+
+  function start(){
+    if (rafId) cancelAnimationFrame(rafId);
+    running = true;
+    lastTs = null;
+    rafId = requestAnimationFrame(step);
+  }
+
+  function stop(){
+    running = false;
+    lastTs = null;
+  }
+
+  function scheduleResume(delay = RESUME_DELAY_MS){
+    if (resumeTimer) clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(() => { start(); resumeTimer = null; }, delay);
+  }
+
+  // Pause on interactions
+  grid.addEventListener('mouseenter', () => stop(), { passive: true });
+  grid.addEventListener('mouseleave', () => scheduleResume(300), { passive: true });
+  grid.addEventListener('pointerdown', () => stop(), { passive: true });
+  grid.addEventListener('pointerup', () => scheduleResume(300), { passive: true });
+  grid.addEventListener('touchstart', () => stop(), { passive: true });
+  grid.addEventListener('touchend', () => scheduleResume(600), { passive: true });
+
+  // Restart / recalc on resize
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    stop();
+    resizeTimer = setTimeout(() => {
+      if (grid.scrollWidth > grid.clientWidth) start();
+    }, 250);
+  });
+
+  // Start only when content overflows (give layout a moment)
+  setTimeout(() => {
+    if (grid.scrollWidth > grid.clientWidth) start();
+  }, 350);
+})();
+</script>
+
+</body>
+</html>

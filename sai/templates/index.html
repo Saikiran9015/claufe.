@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Razorpay Full Payment Methods</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<h2>Pay Now</h2>
+
+<button onclick="startPayment()">Pay ₹500</button>
+
+<script>
+
+async function startPayment() {
+    // Step 1: Create order from backend
+    let orderRes = await fetch("http://localhost:5000/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: 500 })
+    });
+
+    let orderData = await orderRes.json();
+
+    // Step 2: Open Razorpay Checkout
+    let options = {
+        "key": orderData.key,
+        "amount": orderData.amount,
+        "currency": orderData.currency,
+        "name": "My Online Store",
+        "description": "Product Purchase",
+        "order_id": orderData.order_id,
+
+        // ENABLE ALL PAYMENT METHODS
+        "method": {
+            "netbanking": true,
+            "card": true,
+            "upi": true,
+            "wallet": true,
+            "emi": true,
+            "paylater": true
+        },
+
+        "handler": async function (response) {
+            // Step 3: Verify Signature
+            let verifyRes = await fetch("http://localhost:5000/verify-payment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(response)
+            });
+
+            let verifyJSON = await verifyRes.json();
+            if (verifyJSON.success) alert("Payment Successful!");
+            else alert("Payment Verification Failed!");
+        },
+
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+
+    let rzp = new Razorpay(options);
+    rzp.open();
+}
+
+</script>
+
+</body>
+</html>

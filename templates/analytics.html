@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Analytics - Claufe.</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    /* =========================================
+   MOBILE RESPONSIVE — ANALYTICS PAGE
+========================================= */
+
+@media (max-width: 768px) {
+
+  /* Header */
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+
+  .admin-header span {
+    font-size: 14px;
+  }
+
+  /* Back button */
+  .btn-outline {
+    margin-left: 16px !important;
+    margin-top: 8px !important;
+  }
+
+  /* Navigation tabs */
+  .admin-nav {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px 16px;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-nav a {
+    flex: 0 0 auto;
+  }
+
+  .admin-tab {
+    font-size: 14px;
+    padding: 8px 14px;
+    border-radius: 18px;
+  }
+
+  /* Main content */
+  .admin-content {
+    padding: 16px;
+  }
+
+  .admin-content h2 {
+    font-size: 22px;
+  }
+
+  /* Analytics cards */
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .card {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .card-title {
+    font-size: 15px;
+  }
+
+  .card-value {
+    font-size: 26px;
+  }
+
+  .card-sub {
+    font-size: 13px;
+  }
+}
+
+/* EXTRA SMALL PHONES */
+@media (max-width: 480px) {
+
+  .admin-tab {
+    font-size: 13px;
+    padding: 7px 12px;
+  }
+
+  .card-value {
+    font-size: 24px;
+  }
+}
+
+  </style>
+</head>
+
+<body class="admin-shell">
+
+  <!-- Header -->
+  <header class="admin-header">
+        <div class="landing-logo">
+        <img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo">
+    </div>
+
+    <div>
+      {% if session.get('name') %}
+        <span style="margin-right:12px;">
+          {{ session.get('name') }} ({{ session.get('role') }})
+        </span>
+        <a href="{{ url_for('logout') }}" class="landing-admin-link">Logout</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Back to Home -->
+  <a href="{{ url_for('landing') }}">
+    <button class="btn btn-outline" style="margin-left:32px; margin-top:10px;">
+      ← Go to Home Page
+    </button>
+  </a>
+
+  <!-- Navigation -->
+  <nav class="admin-nav">
+    <a href="{{ url_for('admin_dashboard') }}">
+      <button class="admin-tab {{ 'active' if active_page=='dashboard' else '' }}">Dashboard</button>
+    </a>
+
+    <a href="{{ url_for('admin_products') }}">
+      <button class="admin-tab {{ 'active' if active_page=='products' else '' }}">Products</button>
+    </a>
+
+    <a href="{{ url_for('add_product') }}">
+      <button class="admin-tab {{ 'active' if active_page=='upload' else '' }}">Product Images</button>
+    </a>
+
+    <!-- FIXED HERE -->
+    <a href="{{ url_for('admin_analytics') }}">
+      <button class="admin-tab {{ 'active' if active_page=='analytics' else '' }}">Analytics</button>
+    </a>
+
+    <a href="{{ url_for('admin_banners') }}">
+      <button class="admin-tab {{ 'active' if active_page=='banners' else '' }}">Banners</button>
+    </a>
+            <a href="{{ url_for('admin_posters') }}">
+      <button class="admin-tab {{ 'active' if active_page=='posters' else '' }}">Posters</button>
+    </a>
+
+
+  </nav>
+
+  <!-- Main Content -->
+  <main class="admin-content">
+    <h2>Analytics</h2>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Total Products</div>
+        <div class="card-value">{{ total_products }}</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Total Revenue (dummy)</div>
+        <div class="card-value">₹{{ '%.2f'|format(total_revenue) }}</div>
+        <div class="card-sub">Calculated from product prices</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Average Price</div>
+        <div class="card-value">₹{{ '%.2f'|format(avg_price) }}</div>
+      </div>
+    </div>
+
+    <p class="card-sub" style="margin-top:20px;">
+      You can extend this page later to display orders, conversions, monthly earnings, user stats, etc.
+    </p>
+  </main>
+
+</body>
+</html>

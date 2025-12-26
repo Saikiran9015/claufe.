@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success | DreamX</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Header */
+        .header {
+            background: #111;
+            padding: 15px 20px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .success-icon {
+            width: 80px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        h2 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 5px;
+        }
+
+        .success-msg {
+            text-align: center;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .item-box {
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+
+        .item-box p {
+            margin: 2px 0;
+            color: #444;
+        }
+
+        .total-box {
+            background: #111;
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .payment-id {
+            margin-top: 10px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .btn-home {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            background: #111;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-top: 25px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .btn-home:hover {
+            background: #333;
+        }
+        /* ================= RESET ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+}
+
+/* ================= HEADER ================= */
+.header {
+    background: #111;
+    padding: 16px 20px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+/* ================= CONTAINER ================= */
+.container {
+    max-width: 650px;
+    margin: 30px auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* ================= ICON ================= */
+.success-icon {
+    width: 80px;
+    margin: 10px auto;
+    display: block;
+}
+
+/* ================= TEXT ================= */
+h2 {
+    text-align: center;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.success-msg {
+    text-align: center;
+    color: #555;
+    margin-bottom: 25px;
+    font-size: 15px;
+}
+
+/* ================= ITEMS ================= */
+.item-box {
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    background: #fafafa;
+}
+
+.item-box p {
+    margin: 4px 0;
+    color: #444;
+    font-size: 14px;
+}
+
+/* ================= TOTAL ================= */
+.total-box {
+    background: #111;
+    color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* ================= PAYMENT ================= */
+.payment-id {
+    margin-top: 12px;
+    color: #333;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* ================= BUTTON ================= */
+.btn-home {
+    display: block;
+    text-align: center;
+    padding: 14px;
+    background: #111;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    margin-top: 25px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.btn-home:hover {
+    background: #333;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 600px) {
+
+    .header {
+        font-size: 18px;
+        padding: 14px;
+    }
+
+    .container {
+        margin: 20px 14px;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .success-msg {
+        font-size: 14px;
+    }
+
+    .success-icon {
+        width: 70px;
+    }
+
+    .item-box {
+        padding: 12px;
+    }
+
+    .item-box p {
+        font-size: 13px;
+    }
+
+    .total-box {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    .btn-home {
+        font-size: 15px;
+        padding: 13px;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div class="header"> Order Confirmation</div>
+
+    <div class="container">
+
+        <img src="https://cdn-icons-png.flaticon.com/512/845/845646.png"
+             class="success-icon">
+
+        <h2>Order Placed Successfully 🎉</h2>
+        <p class="success-msg">Thank you for shopping with DreamX. Your order is confirmed!</p>
+
+        {% if order %}
+            <h3>Your Items</h3>
+
+            {% for item in order.items %}
+                <div class="item-box">
+                    <p><b>{{ item.name }}</b></p>
+                    <p>Size: {{ item.size }}</p>
+                    <p>Quantity: {{ item.quantity }}</p>
+                    <p>Price: ₹{{ item.price }}</p>
+                </div>
+            {% endfor %}
+
+            <div class="total-box">
+                Total Paid: ₹{{ order.total }}
+            </div>
+
+            <p class="payment-id">
+                Payment ID: <b>{{ order.payment_id }}</b>
+            </p>
+
+        {% else %}
+            <p>No order found!</p>
+        {% endif %}
+
+        <a href="/" class="btn-home">Continue Shopping</a>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Cart - Claufe.</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+  <style>
+    body {
+      background: #f4f5fb;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .cart-wrapper {
+      max-width: 980px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .cart-title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 25px;
+      color: #362463;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 20px;
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .06);
+      margin-bottom: 18px;
+      transition: transform .2s ease;
+    }
+
+    .cart-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .cart-item img {
+      width: 150px;
+      height: 150px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    .item-name {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .item-price {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 10px 0;
+      color: #6A35FF;
+    }
+
+    .qty-size-row {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    select,
+    input[type=number] {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #dadbee;
+      font-size: 15px;
+      width: 130px;
+      background: white;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, .04);
+    }
+
+    .remove-btn {
+      background: #ff4b4b;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .remove-btn:hover {
+      background: #e03636;
+    }
+
+    .pay-btn {
+      background: #6A35FF;
+      width: 100%;
+      padding: 16px;
+      border: none;
+      font-size: 20px;
+      color: white;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(106, 53, 255, .3);
+      transition: .3s;
+    }
+
+    .pay-btn:hover {
+      background: #5a2dd7;
+    }
+
+    .cart-footer {
+      font-size: 24px;
+      font-weight: 700;
+      text-align: right;
+      margin-top: 25px;
+      letter-spacing: -0.5px;
+      color: #362463;
+    }
+    /* =========================================
+   MOBILE RESPONSIVE — CART PAGE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .cart-wrapper {
+    margin: 14px auto;
+    padding: 12px;
+  }
+
+  .cart-title {
+    font-size: 26px;
+    text-align: center;
+  }
+
+  /* Stack cart item */
+  .cart-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .cart-item > img {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 12px;
+  }
+  .cart-item img {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+  }
+
+  .item-info {
+    width: 100%;
+    text-align: left;
+    padding: 8px 6px;
+  }
+
+  .item-name {
+    font-size: 20px;
+  }
+
+  .item-price {
+    font-size: 18px;
+  }
+
+  /* Stack size & qty */
+  .qty-size-row {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  select,
+  input[type=number] {
+    width: 100%;
+    font-size: 16px; /* prevents iOS zoom */
+    padding: 12px 14px;
+    min-height: 44px;
+  }
+
+  /* make remove button full width and prominent */
+  .remove-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+  .remove-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .pay-btn {
+    font-size: 18px;
+    padding: 16px;
+    margin-top: 18px;
+  }
+
+  .cart-footer {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 18px;
+  }
+}
+
+/* EXTRA SMALL PHONES */
+@media (max-width: 480px) {
+
+  .cart-title {
+    font-size: 24px;
+  }
+
+  .item-name {
+    font-size: 18px;
+  }
+
+  .item-price {
+    font-size: 17px;
+  }
+}
+
+/* Header / Back link adjustments for small screens */
+.landing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.landing-admin-link { font-size: 14px; }
+
+/* small logo / mobile tweaks */
+.logo-img { max-height: 36px; width: auto; display: block; }
+
+/* Accessibility: focus states */
+.remove-btn:focus,
+.pay-btn:focus,
+select:focus,
+input[type=number]:focus {
+  outline: 3px solid rgba(106,53,255,0.12);
+  outline-offset: 2px;
+}
+/* =========================================
+   MOBILE RESPONSIVE — CART PAGE (FIXED)
+========================================= */
+
+@media (max-width: 768px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .cart-wrapper {
+    margin: 12px auto;
+    padding: 12px;
+  }
+
+  .cart-title {
+    font-size: 26px;
+    text-align: center;
+  }
+
+  /* Stack cart items */
+  .cart-item {
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  /* Product image */
+  .cart-item img {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 14px;
+  }
+
+  /* Ensure image appears before details on mobile */
+  .cart-item img { order: 0; margin-bottom: 12px; }
+  .item-info { order: 1; }
+
+  .item-info {
+    width: 100%;
+    padding: 4px;
+  }
+
+  .item-name {
+    font-size: 20px;
+  }
+
+  .item-price {
+    font-size: 18px;
+  }
+
+  /* Stack size & quantity */
+  .qty-size-row {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  select,
+  input[type=number] {
+    width: 100%;
+    font-size: 16px;   /* prevents iOS zoom */
+    padding: 14px;
+    min-height: 44px;
+  }
+
+  /* Full-width remove button */
+  .remove-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  /* Payment button */
+  .pay-btn {
+    font-size: 18px;
+    padding: 16px;
+    margin-top: 20px;
+  }
+
+  .cart-footer {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 16px;
+  }
+}
+
+/* Mobile pay bar (hidden on desktop) */
+.mobile-pay { display:none; }
+@media (max-width: 768px) {
+  .pay-btn.desktop-hide { display:none; }
+  .mobile-pay {
+    display:flex;
+    position:fixed;
+    left:12px;
+    right:12px;
+    bottom:12px;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 14px;
+    background: linear-gradient(180deg, #ffffff, #fbfbff);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(15,12,40,0.12);
+    z-index: 1200;
+    backdrop-filter: blur(6px);
+  }
+  .mobile-pay .mobile-total { font-weight:700; color:#362463; font-size:16px; }
+  .mobile-pay .mobile-count { display:inline-block; margin-left:8px; color:#6a35ff; font-weight:700; }
+  .mobile-pay .pay-btn { padding:10px 14px; border-radius:10px; font-size:16px; min-width:110px; }
+  /* ensure page content isn't hidden behind the fixed bar */
+  body { padding-bottom: 92px; }
+}
+
+/* EXTRA SMALL DEVICES */
+@media (max-width: 480px) {
+
+  .cart-title {
+    font-size: 24px;
+  }
+
+  .item-name {
+    font-size: 18px;
+  }
+
+  .item-price {
+    font-size: 17px;
+  }
+}
+
+  </style>
+
+</head>
+
+<body>
+
+  <header class="landing-header">
+    <div class="landing-logo">
+      <img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo">
+    </div>
+
+    <a href="{{ url_for('landing') }}" class="landing-admin-link">← Back</a>
+  </header>
+
+  <div class="cart-wrapper">
+
+    <h2 class="cart-title">Your Cart</h2>
+
+    {% if items %}
+    {% for item in items %}
+    <div class="cart-item">
+
+      <img src="{{ item.image if 'data:' in item.image else url_for('uploaded_file', filename=item.image) }}"
+        alt="product">
+
+      <div class="item-info">
+
+        <div class="item-name">{{ item.name }}</div>
+
+        <div class="item-price">
+          ₹<span class="price" id="price-{{ item._id }}" data-base="{{ item.price }}">
+            {{ item.price * item.quantity }}
+          </span>
+        </div>
+
+        <!-- UPDATE CART ITEM -->
+        <form action="{{ url_for('update_cart_item', item_id=item['_id']) }}" method="POST" class="update-form">
+
+          <div class="qty-size-row">
+
+            <div>
+              <label>Size</label><br>
+              <select name="size" data-item="{{ item._id }}" class="size-select" required>
+                <option value="S" {% if item.size=='S' %}selected{% endif %}>S</option>
+                <option value="M" {% if item.size=='M' %}selected{% endif %}>M</option>
+                <option value="L" {% if item.size=='L' %}selected{% endif %}>L</option>
+                <option value="XL" {% if item.size=='XL' %}selected{% endif %}>XL</option>
+                <option value="XXL" {% if item.size=='XXL' %}selected{% endif %}>XXL</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Qty</label><br>
+              <input type="number" name="quantity" min="1" value="{{ item.quantity }}" required>
+            </div>
+
+          </div>
+
+          <button type="submit" class="update-btn" style="display:none;">Update</button>
+        </form>
+
+        <!-- DELETE CART ITEM -->
+        <form action="{{ url_for('delete_cart_item', item_id=item['_id']) }}" method="POST" style="margin-top:10px;">
+          <button type="submit" class="remove-btn">Remove</button>
+        </form>
+
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- PAYMENT BUTTON (desktop) -->
+    <a href="{{ url_for('checkout') }}">
+      <button class="pay-btn desktop-hide">Proceed to Payment</button>
+    </a>
+
+    <div class="cart-footer desktop-hide">
+      Total: ₹{{ total }}
+    </div>
+
+    <!-- MOBILE PAY BAR -->
+      <div class="mobile-pay" aria-hidden="false">
+        <div>
+          <div class="mobile-total">₹<span id="mobile-total">{{ total }}</span></div>
+          <div style="font-size:12px;color:#666;">Items: <span id="mobile-count">{{ items|length if items else 0 }}</span></div>
+        </div>
+        <a href="{{ url_for('checkout') }}">
+          <button class="pay-btn">Pay</button>
+        </a>
+      </div>
+
+
+    {% else %}
+    <p>Your cart is empty.</p>
+    {% endif %}
+
+  </div>
+
+
+  <!-- JS SECTION -->
+<script>
+  function updateTotals() {
+    let total = 0;
+
+    document.querySelectorAll(".cart-item").forEach(item => {
+      let priceSpan = item.querySelector(".price");
+      let qtyInput = item.querySelector("input[name='quantity']");
+      let base = parseFloat(priceSpan.dataset.base);
+      let qty = parseInt(qtyInput.value);
+
+      let newPrice = base * qty;
+      priceSpan.innerHTML = newPrice.toFixed(2);
+      total += newPrice;
+    });
+
+    document.querySelector(".cart-footer").innerHTML =
+      "Total: ₹" + total.toFixed(2);
+  }
+
+  // ✅ AUTO SUBMIT quantity change
+  document.querySelectorAll("input[name='quantity']").forEach(input => {
+    input.addEventListener("change", function () {
+      this.closest("form").submit();
+    });
+  });
+
+  // Auto submit size change (already good)
+  document.querySelectorAll(".size-select").forEach(select => {
+    select.addEventListener("change", () => {
+      select.closest("form").submit();
+    });
+  });
+
+  updateTotals();
+</script>
+
+<script>
+  // keep mobile total in sync when quantities change
+  function updateMobileTotal() {
+    const totalEl = document.getElementById('mobile-total');
+    if (!totalEl) return;
+    let total = 0;
+    document.querySelectorAll('.cart-item').forEach(item => {
+      const base = parseFloat(item.querySelector('.price').dataset.base || 0);
+      const qty = parseInt(item.querySelector("input[name='quantity']").value) || 0;
+      total += base * qty;
+    });
+    totalEl.innerText = total.toFixed(2);
+  }
+
+  // run when any quantity or size changes (quantities already auto-submit, but keep UI updated)
+  document.querySelectorAll("input[name='quantity'], .size-select").forEach(el => {
+    el.addEventListener('input', () => { updateTotals(); updateMobileTotal(); });
+    el.addEventListener('change', () => { updateTotals(); updateMobileTotal(); });
+  });
+
+  // init mobile total
+  updateMobileTotal();
+  // update mobile item count
+  function updateMobileCount(){
+    const c = document.querySelectorAll('.cart-item').length;
+    const el = document.getElementById('mobile-count');
+    if (el) el.innerText = c;
+  }
+  updateMobileCount();
+
+  // also update when DOM changes (e.g., item removed)
+  const observer = new MutationObserver(()=>{ updateMobileTotal(); updateMobileCount(); });
+  observer.observe(document.querySelector('.cart-wrapper'), { childList: true, subtree: true });
+</script>
+
+
+</body>
+
+</html>

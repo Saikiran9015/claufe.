@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Add Product – Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <!-- upload page styles moved to static/styles.css -->
+</head>
+
+<body class="admin-page">
+  <header class="admin-header">
+    <div class="landing-logo">
+      <img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo">
+    </div>
+    <div class="header-user">
+      {% if session.get('name') %}
+      <span class="user-name">{{ session.get('name') }} ({{ session.get('role') }})</span>
+      <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+      {% endif %}
+    </div>
+  </header>
+<a href="{{ url_for('landing') }}" 
+   style="
+     display: inline-block;
+     margin: 16px 0;
+     padding: 10px 18px;
+     background: #ffffff;
+     color: #333;
+     border: 1px solid #ddd;
+     border-radius: 8px;
+     font-size: 14px;
+     font-weight: 500;
+     text-decoration: none;
+     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+     transition: all 0.2s ease;
+   "
+   onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#cbd5e1';"
+   onmouseout="this.style.background='#ffffff'; this.style.borderColor='#ddd';"
+>
+  ← Go to Home Page
+</a>
+
+  <nav class="admin-nav">
+
+    <a href="{{ url_for('admin_dashboard') }}">
+      <button class="admin-tab {{ 'active' if active_page=='dashboard' else '' }}">Dashboard</button>
+    </a>
+
+    <a href="{{ url_for('admin_products') }}">
+      <button class="admin-tab {{ 'active' if active_page=='products' else '' }}">Products</button>
+    </a>
+
+    <a href="{{ url_for('add_product') }}">
+      <button class="admin-tab {{ 'active' if active_page=='upload' else '' }}">ADD PRODUCTS</button>
+    </a>
+
+    <a href="{{ url_for('admin_analytics') }}">
+      <button class="admin-tab {{ 'active' if active_page=='analytics' else '' }}">Analytics</button>
+    </a>
+
+    <a href="{{ url_for('admin_banners') }}">
+      <button class="admin-tab {{ 'active' if active_page=='banners' else '' }}">Banners</button>
+    </a>
+            <a href="{{ url_for('admin_posters') }}">
+      <button class="admin-tab {{ 'active' if active_page=='posters' else '' }}">Posters</button>
+    </a>
+  </nav>
+
+  <div class="admin-shell upload-shell">
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-wrap">
+      {% for category, message in messages %}
+      <div class="alert-box {{ 'alert-error' if category == 'error' else 'alert-success' }}">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="top-bar">
+      <h1>Add New Product</h1>
+      <a href="{{ url_for('admin_dashboard') }}" class="link-back">← Back to Dashboard</a>
+    </div>
+
+    <form action="{{ url_for('add_product') }}" method="POST" enctype="multipart/form-data">
+
+      <div class="row">
+        <div class="col-2">
+          <label>Product Name</label>
+          <input type="text" name="name" required placeholder="GENJUTSU Hoodie">
+        </div>
+        <div class="col-1">
+          <label>Price (₹)</label>
+          <input type="number" step="0.01" name="price" required placeholder="699">
+        </div>
+        <div class="col-1">
+          <label>Old Price (₹) (optional)</label>
+          <input type="number" step="0.01" name="old_price" placeholder="1399">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-1">
+          <label>Description</label>
+          <textarea name="description" required placeholder="Write product description here..."></textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-1">
+          <label>Product Images (up to 4)</label>
+          <label class="image-upload-box">
+            <span class="plus">+</span>
+            <div>Click to choose up to 4 images</div>
+            <input type="file" name="images" id="imageInput" accept="image/*" multiple required class="image-input-hidden">
+          </label>
+          <!-- Preview Container -->
+          <div id="previewContainer"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-1">
+          <label>Available Sizes</label>
+          <div class="pill-sizes">
+            {% for s in ["S","M","L","XL","XXL"] %}
+            <label>
+              <input type="checkbox" name="sizes" value="{{ s }}"> {{ s }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-1">
+          <label>Stock Count per Size</label>
+          <div class="stock-grid">
+            {% for s in ["S","M","L","XL","XXL"] %}
+            <div class="stock-box">
+              <div class="size-title">Size {{ s }}</div>
+              <input type="number" name="stock_{{ s }}" min="0" value="0">
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- ⭐⭐ DEFAULT RATING (ADMIN ONLY) -->
+      <div class="row">
+        <div class="col-1">
+          <label>Default Rating (0 - 5)</label>
+          <input type="number" step="0.1" min="0" max="5" name="rating" placeholder="4.5">
+          <small class="small-muted">Admin Only. Customers cannot edit.</small>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-main">Upload Product</button>
+
+    </form>
+  </div>
+
+  <script>
+    const imageInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('previewContainer');
+
+    imageInput.addEventListener('change', function () {
+      previewContainer.innerHTML = ''; // Clear previous previews
+      const files = Array.from(this.files).slice(0, 4); // Limit to 4
+
+      files.forEach(file => {
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'preview-thumb';
+            previewContainer.appendChild(img);
+          }
+          reader.readAsDataURL(file);
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>

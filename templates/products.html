@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Products - Claufe.</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <style>
+/* =========================================
+   ADMIN PRODUCTS – MOBILE RESPONSIVE FIX
+========================================= */
+
+/* Wrapper allows horizontal scroll */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Table base */
+.table {
+    width: 100%;
+    min-width: 720px; /* allows scroll instead of breaking */
+    border-collapse: collapse;
+}
+
+/* Header section */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Search input */
+.table-search {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+    /* Header stack */
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    /* Content padding */
+    .admin-content {
+        padding: 15px;
+    }
+
+    /* Buttons full width */
+    .btn {
+        font-size: 14px;
+        padding: 10px 14px;
+    }
+
+    /* Table header stack */
+    .table-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .table-header div {
+        width: 100%;
+    }
+
+    .table-search {
+        width: 100%;
+    }
+}
+
+/* EXTRA SMALL PHONES */
+@media (max-width: 480px) {
+
+    .admin-tab {
+        font-size: 13px;
+        padding: 8px 14px;
+    }
+
+    /* Image smaller */
+    table img {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}
+
+  </style>
+</head>
+
+<body class="admin-shell">
+
+  <header class="admin-header">
+    <div class="landing-logo">
+      <img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo">
+
+    </div>
+    <div>
+      {% if session.get('name') %}
+      <span style="margin-right:12px;">
+        {{ session.get('name') }} ({{ session.get('role') }})
+      </span>
+      <a href="{{ url_for('logout') }}" class="landing-admin-link">Logout</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <a href="{{ url_for('landing') }}">
+    <button class="btn btn-outline" style="margin-left:32px; margin-top:10px;">
+      ← Go to Home Page
+    </button>
+  </a>
+
+  <!-- NAVIGATION -->
+  <nav class="admin-nav">
+    <a href="{{ url_for('admin_dashboard') }}">
+      <button class="admin-tab {{ 'active' if active_page=='dashboard' else '' }}">Dashboard</button>
+    </a>
+
+    <a href="{{ url_for('admin_products') }}">
+      <button class="admin-tab {{ 'active' if active_page=='products' else '' }}">Products</button>
+    </a>
+
+    <a href="{{ url_for('add_product') }}">
+      <button class="admin-tab {{ 'active' if active_page=='upload' else '' }}">Product Images</button>
+    </a>
+
+    <!-- FIXED: Correct analytics endpoint -->
+    <a href="{{ url_for('admin_analytics') }}">
+      <button class="admin-tab {{ 'active' if active_page=='analytics' else '' }}">Analytics</button>
+    </a>
+
+    <a href="{{ url_for('admin_banners') }}">
+      <button class="admin-tab {{ 'active' if active_page=='banners' else '' }}">Banners</button>
+    </a>
+            <a href="{{ url_for('admin_posters') }}">
+      <button class="admin-tab {{ 'active' if active_page=='posters' else '' }}">Posters</button>
+    </a>
+
+
+  </nav>
+
+  <main class="admin-content">
+
+    <h2>Products</h2>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, msg in messages %}
+    <div class="alert alert-{{ category }}">{{ msg }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="table-wrapper">
+
+      <div class="table-header">
+        <div class="table-title">All Products</div>
+
+        <div>
+          <input id="searchProducts" class="table-search" placeholder="Search products..."
+            onkeyup="filterTable('searchProducts','productsTable')">
+
+          <a href="{{ url_for('add_product') }}" class="btn btn-primary" style="text-decoration:none;margin-left:8px;">
+            + Add Product
+          </a>
+        </div>
+      </div>
+
+      <table class="table" id="productsTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for p in products %}
+          {% set pid = p['_id'] %}
+          <tr>
+
+            <td>{{ loop.index }}</td>
+
+            <td>
+              {% if p['image_filename'] %}
+              <img
+                src="{{ p['image_filename'] if 'data:' in p['image_filename'] else url_for('uploaded_file', filename=p['image_filename']) }}"
+                style="width:48px;height:48px;object-fit:cover;border-radius:8px;">
+              {% else %}
+              —
+              {% endif %}
+            </td>
+
+            <td>{{ p['name'] }}</td>
+
+            <td>₹{{ '%.2f'|format(p['price']) }}</td>
+
+            <td>
+              {{ p['created_at'].strftime('%Y-%m-%d') if p['created_at'] else '' }}
+            </td>
+
+            <td>
+              <form id="deleteForm{{ pid }}" method="POST" action="{{ url_for('delete_product', product_id=pid) }}"
+                style="display:inline;">
+
+                <button type="button" class="btn btn-danger" onclick="confirmDelete('deleteForm{{ pid }}')">
+                  Delete
+                </button>
+              </form>
+            </td>
+
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6">No products yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+
+  </main>
+
+</body>
+
+</html>

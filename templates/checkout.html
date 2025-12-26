@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Checkout - Delivery Address</title>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<style>
+    body { margin: 0; font-family: 'Poppins', sans-serif; background: #f5f7fa; }
+
+    /* HEADER */
+    .landing-header {
+        width: 100%;
+        padding: 14px 40px;
+        background: #000000;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .landing-logo { display: flex; align-items: center; gap: 12px; }
+    .landing-logo img { height: 42px; width: auto; }
+    .landing-admin-link {
+        color: white; text-decoration: none; padding: 6px 14px;
+        border-radius: 6px; font-size: 15px; transition: 0.3s;
+    }
+    .landing-admin-link:hover { background: #333; }
+
+    /* CHECKOUT BODY */
+    .checkout-container {
+        max-width: 650px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 14px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    }
+    input, textarea {
+        width: 100%; padding: 12px; margin: 10px 0;
+        border-radius: 8px; background: #eef2ff;
+        border: 1px solid #dcdcdc; font-size: 15px;
+    }
+    .btn-pay {
+        width: 100%; padding: 16px; background: #6b30ff;
+        border: none; color: white; font-size: 18px;
+        border-radius: 10px; cursor: pointer; margin-top: 15px;
+    }
+    /* =====================================================
+   MOBILE RESPONSIVE FIX — CHECKOUT PAGE
+===================================================== */
+@media (max-width: 768px) {
+
+    /* Header fix */
+    .landing-header {
+        padding: 12px 16px;
+    }
+
+    .landing-logo img {
+        height: 34px;
+    }
+
+    .landing-admin-link {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    /* Checkout container */
+    .checkout-container {
+        width: 92%;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    /* Inputs & textarea */
+    input, textarea {
+        font-size: 16px;           /* prevents zoom on iOS */
+        padding: 14px;
+        border-radius: 10px;
+    }
+
+    textarea {
+        min-height: 90px;
+    }
+
+    /* Pay button */
+    .btn-pay {
+        font-size: 18px;
+        padding: 18px;
+        border-radius: 12px;
+    }
+}
+
+/* EXTRA SMALL PHONES */
+@media (max-width: 480px) {
+
+    .checkout-container h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .btn-pay {
+        font-size: 17px;
+    }
+}
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #f5f7fa;
+}
+
+/* ================= HEADER ================= */
+.landing-header {
+  width: 100%;
+  padding: 14px 40px;
+  background: #000;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.landing-logo img {
+  height: 42px;
+}
+
+.landing-admin-link {
+  color: white;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.landing-admin-link:hover {
+  background: #333;
+}
+
+/* ================= CHECKOUT ================= */
+.checkout-container {
+  max-width: 650px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+}
+
+.checkout-container h2 {
+  margin-top: 0;
+}
+
+/* INPUTS */
+input, textarea {
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 10px;
+  background: #eef2ff;
+  border: 1px solid #dcdcdc;
+  font-size: 16px; /* ✅ prevents iOS zoom */
+}
+
+textarea {
+  min-height: 90px;
+}
+
+/* PAY BUTTON */
+.btn-pay {
+  width: 100%;
+  padding: 18px;
+  background: #6b30ff;
+  border: none;
+  color: white;
+  font-size: 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+/* ================= MOBILE FIX ================= */
+@media (max-width: 768px) {
+
+  /* Header stacks */
+  .landing-header {
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .landing-logo img {
+    height: 34px;
+  }
+
+  .landing-header > div:last-child {
+    display: flex;
+    gap: 10px;
+  }
+
+  /* Checkout box */
+  .checkout-container {
+    width: 92%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 12px;
+  }
+}
+
+/* ================= SMALL PHONES ================= */
+@media (max-width: 480px) {
+  .checkout-container h2 {
+    font-size: 22px;
+  }
+
+  .btn-pay {
+    font-size: 17px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= HEADER SECTION ADDED ================= -->
+<header class="landing-header">
+
+    <div class="landing-logo">
+        <img src="{{ url_for('static', filename='3.png') }}" alt="Logo">
+    </div>
+
+    <div>
+        <a href="{{ url_for('landing') }}" class="landing-admin-link">Home</a>
+        <a href="{{ url_for('cart') }}" class="landing-admin-link">Cart</a>
+
+
+    </div>
+
+</header>
+<!-- ====================================================== -->
+
+
+<div class="checkout-container">
+    <h2>Delivery Address</h2>
+
+    <label>Full Name</label>
+    <input id="full_name" type="text" placeholder="Enter your full name" required>
+
+    <label>Mobile Number</label>
+    <input id="phone" type="tel" maxlength="10" placeholder="10-digit mobile number" required>
+
+    <label>Full Address</label>
+    <textarea id="address" placeholder="House No, Street, Area" required></textarea>
+
+    <label>Pincode</label>
+    <input id="pincode" type="text" maxlength="6" placeholder="Pincode" required>
+
+    <label>City</label>
+    <input id="city" type="text" placeholder="City" required>
+
+    <label>State</label>
+    <input id="state" type="text" placeholder="State" required>
+
+    <button type="button" class="btn-pay" onclick="startPayment()">
+        Pay Now ₹{{ total }}
+    </button>
+</div>
+
+<script>
+    const RAZORPAY_KEY = "{{ razorpay_key }}";
+    const TOTAL_AMOUNT = Number("{{ total }}") * 100;
+
+    async function startPayment() {
+
+        const full_name = document.getElementById("full_name").value.trim();
+        const phone     = document.getElementById("phone").value.trim();
+        const address   = document.getElementById("address").value.trim();
+        const pincode   = document.getElementById("pincode").value.trim();
+        const city      = document.getElementById("city").value.trim();
+        const state     = document.getElementById("state").value.trim();
+
+        if (!full_name || !phone || !address || !pincode || !city || !state) {
+            alert("Please fill all fields.");
+            return;
+        }
+
+        if (phone.length !== 10) {
+            alert("Enter a valid 10-digit mobile number.");
+            return;
+        }
+
+        if (pincode.length !== 6) {
+            alert("Enter a valid 6-digit pincode.");
+            return;
+        }
+
+        const orderResponse = await fetch("/create-razorpay-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ amount: TOTAL_AMOUNT })
+        });
+
+        const order = await orderResponse.json();
+        if (!order.id) {
+            alert("Order creation failed!");
+            return;
+        }
+
+        const options = {
+            key: RAZORPAY_KEY,
+            amount: order.amount,
+            currency: "INR",
+            name: "Claufe",
+            description: "Order Payment",
+            image: "{{ url_for('static', filename='4 r.png') }}",
+            order_id: order.id,
+
+            handler: async function (response) {
+                const verify = await fetch("/verify-payment", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        ...response,
+                        full_name,
+                        phone,
+                        address,
+                        pincode,
+                        city,
+                        state
+                    })
+                });
+
+                const result = await verify.json();
+                if (result.success) {
+                    window.location.href = result.redirect_url;
+                } else {
+                    alert("Payment Verification Failed");
+                }
+            },
+
+            prefill: { name: full_name, contact: phone },
+            theme: { color: "#6b30ff" }
+        };
+
+        new Razorpay(options).open();
+    }
+</script>
+
+</body>
+</html>

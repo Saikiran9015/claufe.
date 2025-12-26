@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ p.name }} | Claufe</title>
+
+<style>
+/* ================= GLOBAL ================= */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #f5f5f7;
+}
+
+/* ================= HEADER ================= */
+.landing-header {
+    width: 100%;
+    padding: 14px 20px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.landing-logo img {
+    width: 120px;
+}
+
+.landing-admin-link {
+    margin-left: 16px;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+/* ================= PAGE WRAPPER ================= */
+.page-wrapper {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 40px;
+}
+
+/* ================= IMAGE SECTION ================= */
+.left-view {
+    flex: 1;
+}
+
+.main-image-box {
+    width: 100%;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.main-image-box img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.thumb-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.thumb-row img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 2px solid #ddd;
+}
+
+/* ================= PRODUCT INFO ================= */
+.right-info {
+    flex: 1;
+}
+
+h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.price-row {
+    margin: 16px 0;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+.old-price {
+    margin-left: 10px;
+    color: #888;
+    text-decoration: line-through;
+}
+
+/* ================= SIZE BUTTONS ================= */
+.size-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.size-btn {
+    background: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.size-btn.active,
+.size-btn:hover {
+    background: #6a35ff;
+    border-color: #6a35ff;
+    color: #fff;
+}
+
+/* ================= CTA ================= */
+.add-btn {
+    margin-top: 22px;
+    width: 100%;
+    padding: 16px;
+    font-size: 18px;
+    border-radius: 14px;
+    border: none;
+    background: #6a35ff;
+    color: white;
+    cursor: pointer;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+    body {
+        background: #ffffff;
+    }
+
+    .page-wrapper {
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        gap: 0;
+    }
+
+    /* Image full width */
+    .main-image-box {
+        border-radius: 0;
+    }
+
+    .thumb-row {
+        padding: 10px;
+        overflow-x: auto;
+    }
+
+    .thumb-row img {
+        width: 64px;
+        height: 64px;
+        flex-shrink: 0;
+    }
+
+    /* Info section */
+    .right-info {
+        padding: 16px;
+        background: #f8f8fb;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .price-row {
+        font-size: 22px;
+    }
+
+    .add-btn {
+        font-size: 18px;
+        padding: 18px;
+    }
+}
+
+/* EXTRA SMALL */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 20px;
+    }
+    .price-row {
+        font-size: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="landing-header">
+    <div class="landing-logo">
+        <a href="{{ url_for('landing') }}">
+            <img src="{{ url_for('static', filename='3.png') }}" alt="Logo">
+        </a>
+    </div>
+    <div>
+        <a href="{{ url_for('admin_dashboard') }}" class="landing-admin-link">Admin</a>
+        <a href="{{ url_for('cart') }}" class="landing-admin-link">Cart</a>
+    </div>
+</header>
+
+<div class="page-wrapper">
+
+    <!-- IMAGE SECTION -->
+    <div class="left-view">
+        <div class="main-image-box">
+            {% if p.images %}
+            <img id="mainImage"
+                 src="{{ p.images[0] if 'data:' in p.images[0] else url_for('uploaded_file', filename=p.images[0]) }}">
+            {% else %}
+            <img src="https://via.placeholder.com/600x600">
+            {% endif %}
+        </div>
+
+        <div class="thumb-row">
+            {% for img in p.images %}
+            <img src="{{ img if 'data:' in img else url_for('uploaded_file', filename=img) }}"
+                 onclick="changeImage(this.src)">
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- INFO SECTION -->
+    <div class="right-info">
+        <h1>{{ p.name }}</h1>
+
+        {% if p.rating %}
+        <div>⭐ {{ p.rating }} / 5</div>
+        {% endif %}
+
+        <p style="color:#555;">{{ p.description }}</p>
+
+        <div class="price-row">
+            ₹{{ p.price }}
+            {% if p.old_price %}
+            <span class="old-price">₹{{ p.old_price }}</span>
+            {% endif %}
+        </div>
+
+        <form method="POST" action="{{ url_for('add_to_cart', product_id=p._id) }}">
+            <h3>Select Size</h3>
+
+            <div class="size-box">
+                {% for s in ["S","M","L","XL","XXL"] %}
+                {% if s in p.sizes %}
+                <button type="button" class="size-btn" id="btn_{{ s }}"
+                        onclick="selectSize('{{ s }}')">{{ s }}</button>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <input type="hidden" name="size" id="selectedSize" value="M">
+            <input type="hidden" name="quantity" value="1">
+
+            <button type="submit" class="add-btn">
+                Purchase Now
+            </button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+function selectSize(size) {
+    document.getElementById("selectedSize").value = size;
+    document.querySelectorAll(".size-btn")
+        .forEach(b => b.classList.remove("active"));
+    document.getElementById("btn_" + size).classList.add("active");
+}
+
+function changeImage(src) {
+    document.getElementById("mainImage").src = src;
+}
+</script>
+
+</body>
+</html>

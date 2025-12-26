@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin – Featured Posters | Claufe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f6f7fb;
+  color: #222;
+}
+
+/* ================= HEADER ================= */
+.admin-header {
+  background: #fff;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-logo img {
+  height: 44px;
+}
+
+.admin-user {
+  font-size: 14px;
+}
+
+.admin-user a {
+  color: #6a35ff;
+  text-decoration: none;
+  margin-left: 10px;
+  font-weight: 600;
+}
+
+/* ================= SUB BAR ================= */
+.admin-subbar {
+  background: #fafafa;
+  padding: 12px 32px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.btn-home {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ================= NAV TABS ================= */
+.admin-nav {
+  background: #fff;
+  padding: 0 32px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+}
+
+.admin-tab {
+  padding: 12px 22px;
+  border-radius: 10px 10px 0 0;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  cursor: pointer;
+  color: #555;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  scroll-snap-align: center;
+}
+
+.admin-tab.active {
+  background: #6a35ff;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ================= CONTENT ================= */
+.admin-content {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.page-title {
+  margin-bottom: 6px;
+}
+
+.page-subtitle {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+/* ================= CARD ================= */
+.card {
+  background: #fff;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.08);
+  margin-bottom: 40px;
+}
+
+/* ================= FORM ================= */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.form-grid input[type="file"] {
+  grid-column: 1 / -1;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.btn {
+  background: #6a35ff;
+  color: white;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background: #ff4b4b;
+}
+
+/* ================= POSTER GRID ================= */
+.poster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 22px;
+}
+
+.poster-card {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: transform 0.3s;
+}
+
+.poster-card:hover {
+  transform: translateY(-4px);
+}
+
+.poster-card img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+}
+
+/* Additional poster page styles (match banner design) */
+.admin-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(20,20,40,0.06);
+  overflow: hidden;
+}
+
+.poster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.poster-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.upload-card-body {
+  padding: 20px;
+}
+
+.input-file {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px dashed #d0d7de;
+  border-radius: 8px;
+  background: #fbfbfd;
+  cursor: pointer;
+}
+
+.btn-primary { padding: 12px 18px; }
+
+.poster-card .poster-actions { display:flex; justify-content:space-between; gap:8px; align-items:center; padding:12px 16px; }
+.poster-card .poster-actions .card-sub { color:#666; font-size:13px; }
+
+@media (max-width: 768px) {
+  .admin-header { flex-direction: column; align-items:flex-start; gap:10px; padding:12px 16px; }
+  .admin-nav { overflow-x:auto; padding:10px 12px; gap:8px; }
+  .admin-tab { padding:8px 12px; font-size:14px; }
+  .poster-card img { height:180px; }
+  .poster-card .poster-actions { flex-direction:column; align-items:flex-start; gap:10px; }
+  .btn-danger { width:100%; }
+}
+
+@media (max-width: 480px) {
+  .poster-card img { height:160px; }
+  .page-title { font-size:20px; }
+}
+
+/* ================= POSTER BODY ================= */
+.poster-body {
+  padding: 16px;
+}
+
+.poster-body h4 {
+  margin-bottom: 4px;
+}
+
+.poster-body p {
+  font-size: 14px;
+  color: #666;
+}
+
+.poster-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.poster-actions a {
+  color: #6a35ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .admin-header,
+  .admin-subbar,
+  .admin-nav {
+    padding: 12px 16px;
+  }
+
+  .admin-tabs {
+    overflow-x: auto;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .poster-card img {
+    height: 220px;
+  }
+}
+
+/* --- Additional card/grid styles provided by user --- */
+.admin-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(20,20,40,0.06);
+  overflow: hidden;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.upload-card-body {
+  padding: 20px;
+}
+
+/* File input styled to be touch-friendly */
+.input-file {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px dashed #d0d7de;
+  border-radius: 8px;
+  background: #fbfbfd;
+  cursor: pointer;
+}
+
+.btn-primary { padding: 12px 18px; }
+
+.card .actions { display:flex; justify-content:space-between; gap:8px; align-items:center; padding:12px 16px; }
+.card .actions .card-sub { color:#666; font-size:13px; }
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+  .admin-header { flex-direction: column; align-items:flex-start; gap:10px; padding:12px 16px; }
+  .admin-nav { overflow-x:auto; padding:10px 12px; gap:8px; }
+  .admin-tab { padding:8px 12px; font-size:14px; }
+  .card img { height:180px; }
+  .card .actions { flex-direction:column; align-items:flex-start; gap:10px; }
+  .btn-danger { width:100%; }
+}
+
+@media (max-width: 480px) {
+  .card img { height:160px; }
+  h2 { font-size:20px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="admin-header">
+  <div class="admin-logo">
+    <img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo">
+  </div>
+
+  <div class="admin-user">
+    Admin ({{ session.get('role') }})
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </div>
+</header>
+
+<!-- ================= SUB BAR ================= -->
+<div class="admin-subbar">
+  <a href="{{ url_for('landing') }}">
+    <button class="btn-home">← Go to Home Page</button>
+  </a>
+</div>
+
+<!-- ================= NAV ================= -->
+<nav class="admin-nav">
+  <div class="admin-tabs">
+    <a href="{{ url_for('admin_dashboard') }}"><button class="admin-tab">Dashboard</button></a>
+    <a href="{{ url_for('admin_products') }}"><button class="admin-tab">Products</button></a>
+    <a href="{{ url_for('add_product') }}"><button class="admin-tab">Product Images</button></a>
+    <a href="{{ url_for('admin_analytics') }}"><button class="admin-tab">Analytics</button></a>
+    <a href="{{ url_for('admin_banners') }}"><button class="admin-tab">Banners</button></a>
+        <a href="{{ url_for('admin_posters') }}">
+      <button class="admin-tab {{ 'active' if active_page=='posters' else '' }}">Posters</button>
+    </a>
+
+  </div>
+</nav>
+
+<!-- ================= CONTENT ================= -->
+<div class="admin-content">
+
+  <h2 class="page-title">Featured Posters</h2>
+  <p class="page-subtitle">Manage homepage category posters shown above banners</p>
+
+  <!-- ADD POSTER -->
+  <div class="card">
+    <h3>Add New Poster</h3>
+
+    <form method="POST" enctype="multipart/form-data" id="posterForm">
+      <div class="form-grid">
+        <input type="text" name="title" placeholder="Poster Title" required>
+        <input type="text" name="subtitle" placeholder="Subtitle (optional)">
+        <input type="text" name="link" placeholder="Redirect Link (e.g. /category/shirts)" required>
+        <input type="file" name="image" id="posterImage" accept="image/*" required>
+      </div>
+
+      <!-- preview -->
+      <div style="margin-top:12px;">
+        <img id="posterPreview" src="" alt="Preview" style="display:none; max-width:240px; max-height:180px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.08);" />
+      </div>
+
+      <button class="btn" style="margin-top:16px;">Upload Poster</button>
+    </form>
+  </div>
+
+  <!-- POSTERS -->
+  <div class="poster-grid">
+    {% for p in posters %}
+    <div class="poster-card">
+      <img src="{{ p.image_url }}" alt="{{ p.title }}">
+      <div class="poster-body">
+        <!-- show stored fields so admin can verify DB values -->
+        <h4>{{ p.title }}</h4>
+        {% if p.subtitle %}<p>{{ p.subtitle }}</p>{% endif %}
+        <p style="font-size:13px;color:#666;margin-top:8px;">Link: <a href="{{ p.link }}" style="color:#6a35ff;text-decoration:none;">{{ p.link }}</a></p>
+        {% if p.created_at %}
+          <p style="font-size:12px;color:#999;margin-top:8px;">Added: {{ p.created_at.strftime('%Y-%m-%d %H:%M') if p.created_at is not string and p.created_at else p.created_at }}</p>
+        {% endif %}
+
+        <div class="poster-actions">
+          <form method="POST"
+                action="{{ url_for('delete_poster', poster_id=p['_id']) }}"
+                onsubmit="return confirm('Delete this poster?');">
+            <button class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% else %}
+      <p>No posters added yet.</p>
+    {% endfor %}
+  </div>
+
+</div>
+
+<script>
+// simple image preview for admin poster upload
+(function(){
+  const input = document.getElementById('posterImage');
+  const preview = document.getElementById('posterPreview');
+  const form = document.getElementById('posterForm');
+  if (!input || !preview) return;
+
+  input.addEventListener('change', function(){
+    const f = this.files && this.files[0];
+    if (!f) {
+      preview.style.display = 'none';
+      preview.src = '';
+      return;
+    }
+    const url = URL.createObjectURL(f);
+    preview.src = url;
+    preview.style.display = 'block';
+    // revoke object URL after image loads to free memory
+    preview.onload = () => URL.revokeObjectURL(url);
+  });
+
+  // clear preview when form is reset or submitted
+  form.addEventListener('reset', ()=>{ preview.src=''; preview.style.display='none'; });
+  form.addEventListener('submit', ()=>{ /* keep preview until navigation */ });
+})();
+</script>
+
+<script>
+// Smoothly keep active tab visible and enable simple keyboard navigation
+(function(){
+  const tabs = document.querySelector('.admin-tabs');
+  if (!tabs) return;
+  // make buttons focusable and announce role
+  tabs.querySelectorAll('.admin-tab').forEach(btn => {
+    btn.setAttribute('tabindex', '0');
+    btn.setAttribute('role', 'tab');
+  });
+  tabs.setAttribute('role','tablist');
+
+  // scroll active into view on load
+  const active = tabs.querySelector('.admin-tab.active');
+  if (active) active.scrollIntoView({behavior:'smooth', inline:'center'});
+
+  // click handler: scroll clicked tab to center
+  tabs.addEventListener('click', (e) => {
+    const btn = e.target.closest('.admin-tab');
+    if (btn) btn.scrollIntoView({behavior:'smooth', inline:'center'});
+  });
+
+  // keyboard navigation: ArrowLeft / ArrowRight / Home / End
+  tabs.addEventListener('keydown', (e) => {
+    const key = e.key;
+    if (!['ArrowLeft','ArrowRight','Home','End'].includes(key)) return;
+    const focused = document.activeElement;
+    if (!focused || !focused.classList.contains('admin-tab')) return;
+    let target;
+    if (key === 'ArrowLeft') target = focused.parentElement.previousElementSibling?.querySelector('.admin-tab') || focused.previousElementSibling;
+    if (key === 'ArrowRight') target = focused.parentElement.nextElementSibling?.querySelector('.admin-tab') || focused.nextElementSibling;
+    if (key === 'Home') target = tabs.querySelector('.admin-tab');
+    if (key === 'End') target = tabs.querySelector('.admin-tab:last-child');
+    if (target) {
+      target.focus();
+      target.scrollIntoView({behavior:'smooth', inline:'center'});
+      e.preventDefault();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
