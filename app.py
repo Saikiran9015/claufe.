@@ -145,6 +145,8 @@ banners_col = db[os.getenv("BANNERS_COLLECTION", "banners")]
 print(f"Using MongoDB collection for banners: {banners_col.name}")
 addresses_col = db["addresses"]
 social_col = db["social_links"]
+# Contacts collection for user messages
+contacts_col = db["contacts"]
 @app.context_processor
 def inject_social():
     try:
@@ -516,6 +518,35 @@ def category_view(category):
         products = list(products_col.find().sort("created_at", -1))
 
     return render_template("category.html", products=products, category=category)
+
+
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    """
+    Simple contact form: saves submissions to `contacts` collection and shows a flash.
+    """
+    if request.method == "POST":
+        name = (request.form.get("name") or "").strip()
+        email = (request.form.get("email") or "").strip()
+        subject = (request.form.get("subject") or "").strip()
+        message = (request.form.get("message") or "").strip()
+
+        try:
+            contacts_col.insert_one({
+                "name": name,
+                "email": email,
+                "subject": subject,
+                "message": message,
+                "created_at": datetime.datetime.now()
+            })
+            flash("Thanks! We'll get back to you soon.", "success")
+        except Exception as e:
+            print("Failed to save contact message:", e)
+            flash("Failed to send message. Please try again later.", "error")
+
+        return redirect(url_for("contact"))
+
+    return render_template("contact.html")
 
 
 # =====================================================

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact - Claufe.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body class="login-page">
+
+<header class="login-header">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="{{ url_for('landing') }}"><img src="{{ url_for('static', filename='3.png') }}" class="logo-img" alt="Logo"></a>
+  </div>
+  <nav style="display:flex;gap:12px;align-items:center;">
+    <a href="{{ url_for('landing') }}">← Home</a>
+    <a href="{{ url_for('cart') }}" title="Cart">Cart</a>
+  </nav>
+</header>
+
+<div class="login-wrapper">
+
+  <div class="login-card">
+
+    <h2>Contact Us</h2>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="alert alert-{{ category }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Web3Forms-powered form (posts to external Web3Forms API) -->
+    <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
+      <input type="hidden" name="access_key" value="746fc660-6efc-4fd0-8b23-67968af4dd10">
+
+      <label>Your Name</label>
+      <input type="text" name="name" required placeholder="Full name">
+
+      <label>Email</label>
+      <input type="email" name="email" required placeholder="you@example.com">
+
+      <label>Message</label>
+      <textarea name="message" rows="6" required placeholder="Write your message here..."></textarea>
+
+      <button type="submit" class="login-btn">Submit</button>
+    </form>
+
+  </div>
+
+</div>
+
+</body>
+</html>

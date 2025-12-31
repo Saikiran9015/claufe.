@@ -574,6 +574,33 @@ input {
         margin: 15px auto;
     }
 }
+/* Contact form (Web3Forms) specific styles */
+.contact-form {
+    display: block;
+    width: 100%;
+}
+.contact-form label { font-weight: 600; margin-top: 8px; }
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 15px;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    resize: vertical;
+}
+.contact-form textarea { min-height: 140px; }
+.contact-form .login-btn {
+    background: var(--purple);
+    color: #fff;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 16px;
+}
+.contact-form .login-btn:active { transform: none; }
 /* -------------------------------------------------- */
 /* Upload page styles (scoped to admin pages)        */
 /* -------------------------------------------------- */
