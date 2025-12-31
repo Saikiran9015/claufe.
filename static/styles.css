@@ -899,3 +899,56 @@ html, body, .admin-shell, .admin-content, .card, button, input, textarea, select
     .slide-sidebar .category { font-size: 15px; }
 }
 
+/* =====================================================
+   Snitch navbar + slide-sidebar (shared header used on landing & category)
+   These styles mirror the inline landing header so both pages look identical.
+===================================================== */
+.snitch-navbar * { box-sizing: border-box; }
+.snitch-navbar {
+    height: 70px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+    position: relative;
+    z-index: 1200;
+}
+.snitch-menu-icon { font-size: 26px; cursor: pointer; }
+.snitch-logo { font-size: 20px; font-weight: 700; letter-spacing: 2px; display:flex; align-items:center; gap:8px; }
+.snitch-logo .logo-img { height: 34px; width: auto; display: block; }
+.snitch-nav-right { display:flex; align-items:center; gap:12px; }
+.snitch-search input { padding:8px 12px; border-radius:18px; border:1px solid #ddd; min-width:160px; }
+.snitch-icons { display:flex; align-items:center; gap:10px; }
+.snitch-icons a { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 10px; color: #0b1220; text-decoration: none; background: transparent; font-weight: 600; transition: background .15s ease, color .15s ease, transform .12s ease; }
+.snitch-icons a:hover { background: rgba(10,124,255,0.08); color: #0a7cff; transform: translateY(-1px); }
+
+/* Slide sidebar (off-canvas) */
+.slide-sidebar {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 320px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: 6px 0 18px rgba(0,0,0,0.12);
+    transition: 0.36s ease;
+    z-index: 1400;
+    overflow-y: auto;
+}
+.slide-sidebar.active { left: 0; }
+.slide-sidebar .sidebar-header { padding:16px; font-size:18px; font-weight:700; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center; }
+.slide-sidebar .close-btn { cursor: pointer; font-size:18px; }
+
+.slide-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; pointer-events: none; transition: 0.28s; z-index:1300; }
+.slide-overlay.active { opacity: 1; pointer-events: all; }
+
+@media (max-width: 700px) {
+    .snitch-logo .logo-img { height: 28px; }
+    .snitch-search { display: block; flex: 1 1 auto; min-width: 120px; }
+    .snitch-search input { width: 100%; padding: 8px 10px; font-size: 14px; }
+    .snitch-nav-right { gap: 8px; }
+}
+
+

@@ -8,10 +8,42 @@
 </head>
 <body>
 
+<!-- Slide sidebar (overlay) + snitch-style navbar (copied from landing) -->
+<div class="slide-sidebar" id="slideSidebar" aria-hidden="true">
+  <div class="sidebar-header">
+    CATEGORIES
+    <span class="close-btn" onclick="toggleMenu()">✕</span>
+  </div>
+
+  <a href="{{ url_for('category_view', category='BESTSELLERS') }}" class="category {{ 'active' if category and category|lower == 'bestsellers' else '' }}">BESTSELLERS</a>
+  <a href="{{ url_for('category_view', category='NEW') }}" class="category {{ 'active' if category and category|lower == 'new' else '' }}">NEW</a>
+  <a href="{{ url_for('category_view', category='SHIRTS') }}" class="category {{ 'active' if category and category|lower == 'shirts' else '' }}">SHIRTS</a>
+  <a href="{{ url_for('category_view', category='JACKETS') }}" class="category {{ 'active' if category and category|lower == 'jackets' else '' }}">JACKETS</a>
+  <a href="{{ url_for('category_view', category='JEANS') }}" class="category {{ 'active' if category and category|lower == 'jeans' else '' }}">JEANS</a>
+  <a href="{{ url_for('category_view', category='SWEATERS') }}" class="category {{ 'active' if category and category|lower == 'sweaters' else '' }}">SWEATERS</a>
+  <a href="{{ url_for('category_view', category='T-SHIRTS') }}" class="category {{ 'active' if category and category|lower == 't-shirts' else '' }}">T-SHIRTS</a>
+  <a href="{{ url_for('category_view', category='HOODIES & SWEATSHIRTS') }}" class="category {{ 'active' if category and category|lower == 'hoodies & sweatshirts' else '' }}">HOODIES &amp; SWEATSHIRTS</a>
+</div>
+
+<div class="slide-overlay" id="slideOverlay" onclick="toggleMenu()" aria-hidden="true"></div>
+
 <header class="snitch-navbar">
-    <div class="snitch-menu-icon" onclick="location.href='{{ url_for('landing') }}'">←</div>
-    <div class="snitch-logo"><img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo"></div>
-    <div style="flex:1"></div>
+  <div class="snitch-menu-icon" onclick="toggleMenu()">☰</div>
+  <div class="snitch-logo"><img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo"></div>
+
+  <div class="snitch-nav-right">
+    <div class="snitch-search">
+      <input id="searchInput" type="text" placeholder="Search 'Jackets'">
+    </div>
+    <div class="snitch-icons">
+      {% if session.get('email') %}
+        <a href="{{ url_for('logout') }}" title="Account">Logout</a>
+      {% else %}
+        <a href="{{ url_for('login') }}" title="Login">Login</a>
+      {% endif %}
+      <a href="{{ url_for('cart') }}" title="Cart">Cart</a>
+    </div>
+  </div>
 </header>
 
 <section class="category-page">
@@ -56,5 +88,15 @@
   </section>
 </section>
 
-</body>
-</html>
+  <script>
+  function toggleMenu() {
+    const sb = document.getElementById('slideSidebar');
+    const so = document.getElementById('slideOverlay');
+    if (!sb || !so) return;
+    sb.classList.toggle('active');
+    so.classList.toggle('active');
+  }
+  </script>
+
+  </body>
+  </html>
