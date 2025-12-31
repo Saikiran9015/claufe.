@@ -29,7 +29,7 @@
 
 <header class="snitch-navbar">
   <div class="snitch-menu-icon" onclick="toggleMenu()">☰</div>
-  <div class="snitch-logo"><img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo"></div>
+  <div class="snitch-logo"><a href="{{ url_for('landing') }}"><img src="{{ url_for('static', filename='4.png') }}" class="logo-img" alt="Logo"><span class="site-name">Claufe.</span></a></div>
 
   <div class="snitch-nav-right">
     <div class="snitch-search">
@@ -96,6 +96,22 @@
     sb.classList.toggle('active');
     so.classList.toggle('active');
   }
+  </script>
+
+  <script>
+  // Keep header behavior consistent: Enter in search navigates to category view
+  (function(){
+    const input = document.getElementById('searchInput');
+    if (!input) return;
+
+    input.addEventListener('keydown', function(e){
+      if (e.key === 'Enter'){
+        const q = e.target.value.trim();
+        if (!q) return;
+        window.location.href = '/category/' + encodeURIComponent(q);
+      }
+    });
+  })();
   </script>
 
   </body>

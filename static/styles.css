@@ -928,16 +928,17 @@ html, body, .admin-shell, .admin-content, .card, button, input, textarea, select
 .slide-sidebar {
     position: fixed;
     top: 0;
-    left: -320px;
+    left: 0; /* keep at 0 and use transform for offscreen */
     width: 320px;
     height: 100vh;
     background: #fff;
-    box-shadow: 6px 0 18px rgba(0,0,0,0.12);
-    transition: 0.36s ease;
+    box-shadow: none; /* no shadow when closed to avoid thin visible strip */
+    transform: translateX(-100%);
+    transition: transform 0.36s ease, box-shadow 0.2s ease;
     z-index: 1400;
     overflow-y: auto;
 }
-.slide-sidebar.active { left: 0; }
+.slide-sidebar.active { transform: translateX(0); box-shadow: 6px 0 18px rgba(0,0,0,0.12); }
 .slide-sidebar .sidebar-header { padding:16px; font-size:18px; font-weight:700; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center; }
 .slide-sidebar .close-btn { cursor: pointer; font-size:18px; }
 
@@ -949,6 +950,93 @@ html, body, .admin-shell, .admin-content, .card, button, input, textarea, select
     .snitch-search { display: block; flex: 1 1 auto; min-width: 120px; }
     .snitch-search input { width: 100%; padding: 8px 10px; font-size: 14px; }
     .snitch-nav-right { gap: 8px; }
+}
+
+/* Mobile refinements for snitch header: better spacing, touch targets, and stacking */
+@media (max-width: 600px) {
+    .snitch-navbar {
+    .slide-sidebar { width: 86%; }
+    /* prevent any horizontal overflow that might reveal the hidden sidebar */
+    html, body { overflow-x: hidden; }
+        padding: 8px 12px;
+    }
+
+    .snitch-menu-icon { font-size: 28px; padding: 6px; }
+
+    .snitch-logo { font-size: 18px; }
+    .snitch-logo .logo-img { height: 28px; }
+
+    /* Make search expand and remain usable on small widths */
+    .snitch-search {
+        flex: 1 1 auto;
+        min-width: 0; /* allow shrinking */
+        margin-right: 8px;
+    }
+    .snitch-search input {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: 16px;
+        font-size: 14px;
+    }
+
+    /* Compact icons to save horizontal space while staying tappable */
+    .snitch-icons {
+        gap: 6px;
+    }
+    .snitch-icons a {
+        padding: 8px 10px;
+        font-size: 13px;
+        border-radius: 10px;
+        min-width: 44px; /* ensure touch target */
+        text-align: center;
+    }
+
+    /* Ensure the slide sidebar is large enough on small devices */
+    .slide-sidebar { width: 86%; left: -86%; }
+    .slide-sidebar.active { left: 0; }
+
+    /* Overlay should cover entire viewport and be tappable */
+    .slide-overlay { position: fixed; inset: 0; }
+
+    /* Slightly larger category list items for easier tapping */
+    .slide-sidebar .category { padding: 16px 18px; font-size: 16px; }
+
+    /* Reduce text density in header when space is tight */
+    .snitch-nav-right { align-items: center; }
+}
+
+
+/* Mobile-minimal header: show only menu, logo, search for small devices */
+@media (max-width: 480px) {
+    .snitch-navbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* hide auxiliary icons to keep header clean */
+    .snitch-icons { display: none !important; }
+
+    /* layout: menu (left), logo (center), search (right but flexible) */
+    .snitch-menu-icon { order: 1; font-size: 26px; padding: 6px; }
+    .snitch-logo { order: 2; flex: 1 1 auto; justify-content: center; }
+    .snitch-search { order: 3; flex: 0 0 auto; min-width: 110px; max-width: 220px; }
+
+    .snitch-search input {
+        padding: 8px 10px;
+        border-radius: 16px;
+        font-size: 14px;
+        width: 100%;
+        box-shadow: 0 6px 18px rgba(10,124,255,0.08);
+        border: 1px solid rgba(10,124,255,0.12);
+    }
+
+    /* make logo touch-friendly */
+    .snitch-logo a { display: inline-flex; align-items: center; gap:8px; padding:6px 8px; }
+    .snitch-logo .logo-img { height: 28px; }
+
+    /* ensure slide overlay covers nav when opened */
+    .slide-overlay { z-index: 1350; }
 }
 
 

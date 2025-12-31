@@ -494,9 +494,24 @@ def landing():
 
 @app.route("/category/<string:category>")
 def category_view(category):
-    # Render a dedicated category page showing products for `category` (case-insensitive)
+    # Render a dedicated category page showing products for `category` (case-insensitive).
+    # Use a permissive substring regex and also check `tags` array so buttons like
+    # "BESTSELLERS" or "HOODIES & SWEATSHIRTS" match stored product metadata.
     try:
-        products = list(products_col.find({"category": {"$regex": f"^{re.escape(category)}$", "$options": "i"}}).sort("created_at", -1))
+        # Build a safe, case-insensitive regex for the provided category
+        pattern = re.compile(re.escape(category), re.IGNORECASE)
+
+        query = {
+            "$or": [
+                {"category": pattern},
+                {"tags": pattern}
+            ]
+        }
+
+        products = list(products_col.find(query).sort("created_at", -1))
+        # If no products found with tags/category match, fall back to substring on name
+        if not products:
+            products = list(products_col.find({"name": pattern}).sort("created_at", -1))
     except Exception:
         products = list(products_col.find().sort("created_at", -1))
 
